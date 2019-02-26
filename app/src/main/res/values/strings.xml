@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">DoctorApp</string>
+    <string name="facebook_app_id">294643917886665</string>
+    <string name="fb_login_protocol_scheme">fb294643917886665</string>
+    <string name="doctor">DOCTOR</string>
+    <string name="find_doctor">Find expert doctors for particular problem in one tap</string>
+    <string name="medicine">Medicine</string>
+    <string name="medicine_types">Alopathic, Ayurvedic, and alll types of medicines can be bought here</string>
+    <string name="appointment">Appointments</string>
+    <string name="book_appointment">Book appointments and get best treatments in one tap</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="name_hint">Enter name</string>
+    <string name="emaiil">E-mail</string>
+    <string name="mobile">Mobile Number</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="reset_link_text">We just need your registered email ID to send reset link</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="birthday">Your Birthday</string>
+    <string name="next">Next</string>
+    <string name="max_date">12/30/3000</string>
+    <string name="min_date">12/30/2000</string>
+    <string name="sign_in">Sign In</string>
+    <string name="remember">Remember</string>
+    <string name="or">Or</string>
+    <string name="dont_have_account">Dont Have Account?<u>Create Account</u> </string>
+    <string name="home">Home</string>
+    <string name="options">Options</string>
+    <string name="profile">Profile</string>
+    <string name="cart">Add to cart</string>
+    <string name="find_doctors">Find Doctor</string>
+    <string name="doctriod">Doctriod</string>
+    <string name="medicine_shop">Medicine Shop</string>
+    <string name="first_aid">First Aid</string>
+    <string name="emergency">Emergency</string>
+    <string name="weight">Weight</string>
+    <string name="height">Height</string>
+    <string name="gender">Gender</string>
+
+</resources>

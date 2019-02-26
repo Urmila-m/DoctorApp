@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_20">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/title_style"
+        android:text="@string/birthday"
+        android:textColor="@color/black"
+        android:layout_marginVertical="@dimen/margin_20"/>
+
+    <DatePicker
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/grey_border_background"
+        android:calendarViewShown="false"
+        android:maxDate="@string/max_date"
+        android:minDate="@string/min_date"
+        android:datePickerMode="spinner"
+        android:calendarTextColor="@color/colorAccent"
+        android:elevation="@dimen/elevation">
+
+    </DatePicker>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/button_style"
+        android:text="@string/next"/>
+
+</LinearLayout>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_20">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up"
+        style="@style/title_style"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/name_hint"
+        tools:ignore="LabelFor"
+        android:background="@drawable/edit_text_background"
+        android:layout_marginTop="@dimen/margin_20"
+        android:padding="@dimen/all_padding"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/emaiil"
+        android:background="@drawable/edit_text_background"
+        android:layout_marginTop="@dimen/margin_20"
+        android:padding="@dimen/all_padding"
+
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/mobile"
+        android:background="@drawable/edit_text_background"
+        android:layout_marginTop="@dimen/margin_20"
+        android:padding="@dimen/all_padding"
+
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/password"
+        android:background="@drawable/edit_text_background"
+        android:layout_marginTop="@dimen/margin_20"
+        android:padding="@dimen/all_padding"
+
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/confirm_password"
+        android:background="@drawable/edit_text_background"
+        android:layout_marginTop="@dimen/margin_20"
+        android:padding="@dimen/all_padding"
+
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up"
+        style="@style/button_style"
+        />
+
+
+</LinearLayout>

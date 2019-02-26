@@ -1,0 +1,40 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/colorAccent</item>
+
+    </style>
+
+    <style name="button_style">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/button_background</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginTop">@dimen/margin_20</item>
+    </style>
+
+    <style name="title_style">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">@dimen/title_text_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginVertical">@dimen/all_padding</item>
+    </style>
+
+    <style name="edit_text_style">
+        <item name="android:background">@drawable/edit_text_background</item>
+        <item name="android:padding">@dimen/all_padding</item>
+        <item name="android:layout_marginTop">@dimen/margin_20</item>
+    </style>
+
+    <style name="base_layout_style">
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">@dimen/margin_20</item>
+    </style>
+
+
+</resources>
