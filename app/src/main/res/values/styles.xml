@@ -22,7 +22,8 @@
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textSize">@dimen/title_text_size</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:layout_marginVertical">@dimen/all_padding</item>
+        <item name="android:layout_marginTop">@dimen/all_padding</item>
+        <item name="android:layout_marginBottom">@dimen/all_padding</item>
     </style>
 
     <style name="edit_text_style">

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+            <stroke android:width="@dimen/stroke_width" android:color="@color/grey"/>
+            <corners android:radius="@dimen/corner_radius"/>
+        </shape>
+    </item>
+    <item android:gravity="right" android:right="@dimen/all_padding">
+        <bitmap android:src="@drawable/expand_dropdown_icon"/>
+    </item>
+</layer-list>

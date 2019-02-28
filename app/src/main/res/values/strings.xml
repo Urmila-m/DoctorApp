@@ -37,5 +37,54 @@
     <string name="weight">Weight</string>
     <string name="height">Height</string>
     <string name="gender">Gender</string>
+    <string name="search">Search</string>
+    <string name="vivek_kumar">Dr. Vivek Thakur</string>
+    <string name="peditrician">Peditrician</string>
+    <string name="hospital_name">Dishant Hospital, Ring road, Nagpur</string>
+    <string name="distance">7.5 km</string>
+    <string name="rating">4.5</string>
+    <string name="sample_date">02- November- 2017</string>
+    <string name="sample_time">11 AM to 1 PM</string>
+    <string name="services">Services</string>
+    <string name="weekly_checkup">Weekly Checkup</string>
+    <string name="dollar_50">$50</string>
+    <string name="mins_35">35 mins</string>
+    <string name="total">Total</string>
+    <string name="total_amount">$ 200</string>
+    <string name="age">Age</string>
+    <string name="years_24">24 \n years</string>
+    <string name="blood">Blood</string>
+    <string name="ab">AB</string>
+    <string name="male">Male</string>
+    <string name="goal">Goal</string>
+    <string name="percent87">87%</string>
+    <string name="jitu">Jitu Nepal</string>
+    <string name="insurance">JLR insurance</string>
+    <string name="full_name">Full Name</string>
+    <string name="appointment_book">Book Appointment</string>
+    <string name="review_number">(789 Review)</string>
+    <string name="qualify">(BAMS, MBBS)</string>
+    <string name="photos">Photos</string>
+    <string name="call">Call</string>
+
+    <string-array name="doctor_list">
+        <item>Specialist Doctor</item>
+        <item>Doctor1</item>
+        <item>Doctor2</item>
+        <item>Doctor3</item>
+    </string-array>
+
+    <string-array name="location_list">
+        <item>Nepal</item>
+        <item>Kathmandu</item>
+        <item>Jhapa</item>
+        <item>Butwal</item>
+    </string-array>
+
+    <string-array name="gender_list">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Others</item>
+    </string-array>
 
 </resources>
