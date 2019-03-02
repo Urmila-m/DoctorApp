@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">DoctorApp</string>
+
     <string name="facebook_app_id">294643917886665</string>
     <string name="fb_login_protocol_scheme">fb294643917886665</string>
+
     <string name="doctor">DOCTOR</string>
     <string name="find_doctor">Find expert doctors for particular problem in one tap</string>
     <string name="medicine">Medicine</string>
