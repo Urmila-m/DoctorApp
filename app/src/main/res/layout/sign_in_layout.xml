@@ -53,7 +53,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/sign_up"
+        android:text="@string/sign_in"
         style="@style/button_style"/>
 
     <TextView
