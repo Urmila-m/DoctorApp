@@ -35,7 +35,17 @@
     <style name="base_layout_style">
         <item name="android:orientation">vertical</item>
         <item name="android:padding">@dimen/margin_20</item>
+        <item name="android:background">@color/white</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
 </resources>

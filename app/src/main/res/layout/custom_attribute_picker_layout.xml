@@ -78,6 +78,7 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/btn_custom_attribute_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/button_style"

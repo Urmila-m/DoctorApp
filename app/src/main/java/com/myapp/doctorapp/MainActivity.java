@@ -43,7 +43,17 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnDataRetrievedListener {
+
+    String[] id ;
+    String[] first_name;
+    String[] last_name;
+    String[] gender;
+    String[] birthday;
+    String[] email;
+    Bundle parameters;
+    OnDataRetrievedListener retrieveListener;
+
 
     private static final String EMAIL = "email";
     private static final String PROFILE="public_profile";
@@ -70,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.sign_in_layout);
         btn_custom_fb_sign_in=findViewById(R.id.custom_btn_fb_sign_in);
         btn_custom_fb_sign_in.setOnClickListener(this);
 
@@ -81,18 +91,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         Log.e("FbLOGIN", "onSuccess: " + loginResult.getAccessToken().getUserId() + " " + loginResult.getAccessToken().getToken());
-                        final String[] id = new String[1];
-                        final String[] first_name = new String[1];
-                        final String[] last_name = new String[1];
-                        final String[] gender = new String[1];
-                        final String[] birthday = new String[1];
-                        final String[] email = new String[1];
+                        id = new String[1];
+                        first_name = new String[1];
+                        last_name = new String[1];
+                        gender = new String[1];
+                        birthday = new String[1];
+                        email = new String[1];
 
                         GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
                                 new GraphRequest.GraphJSONObjectCallback() {
                                     @Override
                                     public void onCompleted(JSONObject object, GraphResponse response) {
                                         try {
+                                            retrieveListener=MainActivity.this;
                                             Log.e("FBLOGIN", "fb json object: " + object);
                                             Log.e("FBLOGIN", "fb graph response: " + response);
 
@@ -103,17 +114,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             birthday[0] = object.getString("birthday");
                                             email[0] = object.getString("email");
 
+                                            Bundle b=new Bundle();
+                                            b.putString("first_name", first_name[0]);
+                                            b.putString("last_name", last_name[0]);
+                                            retrieveListener.onDataRetrieved(b);
+
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
                                     }
                                 });
 
-                        Log.e("FBLOGIN", "onSuccess: " + " " + id[0] + " " + first_name[0] + " " + last_name[0] + " " + birthday[0] + " " + gender[0] + " " + email[0]);
-                        Bundle parameters = new Bundle();
+                        parameters = new Bundle();
                         parameters.putString("fields", "first_name, last_name, gender, birthday, email");
                         request.setParameters(parameters);
                         request.executeAsync();
+//                        Log.e("FBLOGIN", "onSuccess: " + " " + id[0] + " " + first_name[0] + " " + last_name[0] + " " + birthday[0] + " " + gender[0] + " " + email[0]);
+
                     }
 
                     @Override
@@ -212,10 +229,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser()!=null){
-                    textView.setText("Logged in already");
+//                    textView.setText("Logged in already");
                 }
                 else{
-                    textView.setText("Not logged in yet");
+//                    textView.setText("Not logged in yet");
                 }
             }
         };
@@ -263,5 +280,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else{
             signIn(mGoogleSignInClient);
         }
+    }
+
+//    on
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(id!=null && first_name!=null && last_name!=null && birthday!=null && gender!=null && email!=null){
+            Log.e("FBLOGIN", "onResume: " + " " + id[0] + " " + first_name[0] + " " + last_name[0] + " " + birthday[0] + " " + gender[0] + " " + email[0]);
+            Log.e("TAG", "onResume: "+parameters.getString("first_name"));
+        }
+    }
+
+    @Override
+    public void onDataRetrieved(Bundle bundle) {
+        Log.e("Tag", "onDataRetrieved: "+bundle.getString("first_name")+" now i can do whatever i wnat with this data yay!!");
     }
 }
