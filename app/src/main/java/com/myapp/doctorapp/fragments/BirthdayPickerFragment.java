@@ -1,4 +1,4 @@
-package com.myapp.doctorapp;
+package com.myapp.doctorapp.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+
+import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
+import com.myapp.doctorapp.R;
 
 public class BirthdayPickerFragment extends Fragment {
 

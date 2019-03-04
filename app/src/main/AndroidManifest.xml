@@ -11,10 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".AfterLoginActivity"
             android:label="@string/title_activity_after_login"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
         <activity android:name=".BeforeLoginActivity">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -22,7 +24,10 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
+
+        <activity android:name=".MainActivity">
+
+        </activity>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -49,7 +54,6 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".CustomAttributePickerActivity" />
     </application>
 
 </manifest>

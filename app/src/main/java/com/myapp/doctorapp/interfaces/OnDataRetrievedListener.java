@@ -1,4 +1,4 @@
-package com.myapp.doctorapp;
+package com.myapp.doctorapp.interfaces;
 
 import android.os.Bundle;
 

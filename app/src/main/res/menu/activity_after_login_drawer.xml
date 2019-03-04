@@ -29,7 +29,7 @@
                 android:title="One extra menu"/>
 
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/nav_log_out"
                 android:icon="@drawable/ic_menu_send"
                 android:title="@string/log_out" />
 
