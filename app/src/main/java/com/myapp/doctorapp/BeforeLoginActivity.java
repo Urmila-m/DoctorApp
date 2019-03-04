@@ -47,7 +47,7 @@ public class BeforeLoginActivity extends AppCompatActivity implements OnFragment
     }
 
     @Override
-    public void onDataRetrieved(Bundle bundle) {
+    public void onDataRetrieved(String source, Bundle bundle) {
         Log.e("TAG", "Activity onDataRetrieved: ");
         String[] person=bundleToString(bundle);
         for (String s:person

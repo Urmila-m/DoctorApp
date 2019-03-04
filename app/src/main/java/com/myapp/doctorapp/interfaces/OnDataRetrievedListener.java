@@ -1,7 +1,8 @@
 package com.myapp.doctorapp.interfaces;
 
+import android.content.Context;
 import android.os.Bundle;
 
 public interface OnDataRetrievedListener {
-    void onDataRetrieved(Bundle bundle);
+    void onDataRetrieved(String source, Bundle bundle);
 }

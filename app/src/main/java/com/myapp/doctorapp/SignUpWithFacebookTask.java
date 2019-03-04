@@ -20,6 +20,7 @@ import java.util.Arrays;
 
 public class SignUpWithFacebookTask {
 
+    private static final String CLASS_NAME="SignUpWithFacebookTask";
     private static final String EMAIL = "email";
     private static final String PROFILE="public_profile";
     private static final String GENDER="user_gender";
@@ -61,6 +62,7 @@ public class SignUpWithFacebookTask {
             @Override
             public void onError(FacebookException error) {
                 Log.e("TAG", "onError: called!!!..");
+                Log.e("TAg", "onError: "+error.getMessage());
             }
         };
 
@@ -99,7 +101,7 @@ public class SignUpWithFacebookTask {
                                 bundle.putString("birthday", birthday);
                                 bundle.putString("email", email);
                                 bundle.putString("image", image_url);
-                                listener.onDataRetrieved(bundle);
+                                listener.onDataRetrieved(CLASS_NAME, bundle);
                             }
 
                         } catch (JSONException e) {

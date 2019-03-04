@@ -37,16 +37,27 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnDataRetrievedListener {
 
+    private static final String API="ApiBackgroundTask";
+    private static final String SIGNUP="SignUpWithFacebookTask";
+
     SignUpWithFacebookTask task;
-    Button btn_custom_fb_sign_in;
+//    Button btn_custom_fb_sign_in;
+    Button btnSignUp;
+    ApiBackgroundTask apiTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        btn_custom_fb_sign_in=findViewById(R.id.custom_btn_fb_sign_in);
-        btn_custom_fb_sign_in.setOnClickListener(this);
+//        setContentView(R.layout.activity_main);
+//        btn_custom_fb_sign_in=findViewById(R.id.custom_btn_fb_sign_in);
+//        btn_custom_fb_sign_in.setOnClickListener(this);
 
+        setContentView(R.layout.sign_up_options_layout);
+
+        btnSignUp=findViewById(R.id.btn_sign_up_options_fb);
+        btnSignUp.setOnClickListener(this);
+
+        apiTask=new ApiBackgroundTask();
         task=new SignUpWithFacebookTask(this);
     }
 
@@ -62,7 +73,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onDataRetrieved(Bundle bundle) {
-        Log.e("Tag", "onDataRetrieved: "+bundle.getString("name")+" now i can do whatever i wnat with this data yay!!");
+    public void onDataRetrieved(String source, Bundle bundle) {
+        if (source.equals(API)) {
+            Log.e("TAG", "onDataRetrieved: Register successful: "+bundle.getString("errorMsg")+"!!!" );
+        }
+        else if (source.equals(SIGNUP)) {
+            Log.e("Tag", "onDataRetrieved: " + bundle.getString("name"));
+            apiTask.insertResponse(bundle, this);
+        }
+
+
     }
 }
