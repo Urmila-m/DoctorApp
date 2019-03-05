@@ -12,23 +12,36 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.myapp.doctorapp.Globals.anInt;
+
 public class ApiBackgroundTask {
     private static final String CLASS_NAME="ApiBackgroundTask";
     private ApiInterface apiInterface;
 
     ApiBackgroundTask(){
+        anInt=1;
         apiInterface=ApiClient.getRetrofitObj().create(ApiInterface.class);
     }
 
     public void insertResponse(final Bundle bundle, final OnDataRetrievedListener listener) {
         if (listener != null) {
-            apiInterface.insertData("insertData", bundle.getString("name"), null, bundle.getString("id"),
+            String height=(bundle.getString("height")==null)?"40":bundle.getString("height");
+            String weight=(bundle.getString("weight")==null)?"40":bundle.getString("weight");
+            String password=(bundle.getString("password")==null)?"":bundle.getString("password");
+            String mobile=(bundle.getString("mobile")==null)?"":bundle.getString("mobile");
+            String id=(bundle.getString("id")==null)?(anInt++)+"":bundle.getString("id");
+            String image=(bundle.getString("image")==null)?"R.drawable.default_image":bundle.getString("image");
+
+            apiInterface.insertData("insertData",
+                    bundle.getString("name"),
+                    mobile,
+                    id,
                     bundle.getString("birthday"),
                     bundle.getString("gender"),
-                    "40",
-                    "40",
-                    "",
-                    bundle.getString("image"),
+                    height,
+                    weight,
+                    password,
+                    image,
                     bundle.getString("email"))
             .enqueue(new Callback<PostResponse>() {
                 @Override

@@ -74,12 +74,12 @@ public class CustomAtrributePickerFragment extends Fragment {
                     int height=npHeight.getValue();
                     int weight=npWeight.getValue();
 
-                    String strGender=gender[intGender];
+                    String strGender=gender[intGender-1];
 
                     Bundle bundle=new Bundle();
                     bundle.putString("gender", strGender);
-                    bundle.putInt("height", height);
-                    bundle.putInt("weight", weight);
+                    bundle.putString("height", height+"");
+                    bundle.putString("weight", weight+"");
 
                     listener.onButtonClicked(btnNext.getId(), new Fragment(), bundle);//finally logged in to the account
                 }

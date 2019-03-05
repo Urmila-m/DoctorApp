@@ -32,6 +32,7 @@
         android:layout_marginTop="@dimen/margin_20">
 
         <RadioButton
+            android:id="@+id/rb_remember_sign_in"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
@@ -48,6 +49,7 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/btn_manual_sign_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/sign_in"
@@ -85,6 +87,8 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/iv_sign_in_fb"
+        android:clickable="true"
         android:background="@drawable/grey_border_background"
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -119,7 +123,6 @@
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/normal_text_size"
             />
-
 
     </LinearLayout>
 

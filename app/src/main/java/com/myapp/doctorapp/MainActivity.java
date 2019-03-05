@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -54,11 +55,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.sign_up_options_layout);
 
-        btnSignUp=findViewById(R.id.btn_sign_up_options_fb);
-        btnSignUp.setOnClickListener(this);
+        AccessToken accessToken=AccessToken.getCurrentAccessToken();
+        boolean isLogin=accessToken!=null&&!accessToken.isExpired();
 
-        apiTask=new ApiBackgroundTask();
-        task=new SignUpWithFacebookTask(this);
+        if (isLogin){
+            startActivity(new Intent(this, AfterLoginActivity.class));
+        }
+
+        else {
+
+            btnSignUp = findViewById(R.id.btn_sign_up_options_fb);
+            btnSignUp.setOnClickListener(this);
+
+            apiTask = new ApiBackgroundTask();
+            task = new SignUpWithFacebookTask(this);
+        }
     }
 
     @Override
@@ -69,7 +80,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-            task.registerFbCallback();
+        task.registerFbCallback();
+
+
     }
 
     @Override
@@ -78,10 +91,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.e("TAG", "onDataRetrieved: Register successful: "+bundle.getString("errorMsg")+"!!!" );
         }
         else if (source.equals(SIGNUP)) {
-            Log.e("Tag", "onDataRetrieved: " + bundle.getString("name"));
+            Log.e("Tag", "onDataRetrieved: " + bundle.getString("image"));
             apiTask.insertResponse(bundle, this);
+            Intent intent=new Intent(MainActivity.this, AfterLoginActivity.class);
+            intent.putExtra("data", bundle);
+            startActivity(intent);
         }
-
 
     }
 }

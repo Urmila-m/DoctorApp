@@ -96,7 +96,7 @@ public class SignUpWithFacebookTask {
 
                                 Bundle bundle = new Bundle();
                                 bundle.putString("id", id);
-                                bundle.putString("name", first_name + last_name);
+                                bundle.putString("name", first_name +" "+last_name);
                                 bundle.putString("gender", gender);
                                 bundle.putString("birthday", birthday);
                                 bundle.putString("email", email);

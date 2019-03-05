@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,10 @@ public class ManualSignUpFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.sign_up_form_layout, container, false);
         return view;
+    }
+
+    boolean isValidEmail(String email){
+        return(!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
     @Override
@@ -66,12 +72,25 @@ public class ManualSignUpFragment extends Fragment {
                 bundle.putString("mobile", mobile);
                 bundle.putString("password", password);
 
+                if (name.equals("")){
+                    Toast.makeText(getContext(), "Name cannot be empty", Toast.LENGTH_SHORT).show();
+                    count++;
+                }
                 if (mobile.length()!=10){
                     Toast.makeText(getContext(), "Incorrect Mobile Number", Toast.LENGTH_SHORT).show();
                     count++;
                 }
                 if(!password.equals(confirmPass)){
                     Toast.makeText(getContext(), "Password incorrect", Toast.LENGTH_SHORT).show();
+                    count++;
+                }
+
+                if (password.length()<8){
+                    Toast.makeText(getContext(), "Password should at least contain 8 characters", Toast.LENGTH_SHORT);
+                    count++;
+                }
+                if (!isValidEmail(email)){
+                    Toast.makeText(getContext(), "Invalid email!!!", Toast.LENGTH_SHORT).show();
                     count++;
                 }
 

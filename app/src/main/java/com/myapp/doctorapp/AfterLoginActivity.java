@@ -1,9 +1,11 @@
 package com.myapp.doctorapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,16 +16,26 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
+import com.squareup.picasso.Picasso;
+
+import java.util.Set;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AfterLoginActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    CircleImageView imageView;
+    TextView tvName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_login);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -43,6 +55,20 @@ public class AfterLoginActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        imageView=navigationView.getHeaderView(0).findViewById(R.id.nav_header_image);
+        tvName=navigationView.getHeaderView(0).findViewById(R.id.tv_nav_header_name);
+
+        //TODO intent ko satta preference bata data load garaune
+        Bundle bundle=getIntent().getBundleExtra("data");
+        if (bundle!=null) {
+            String image = bundle.getString("image");
+            String name = bundle.getString("name");
+            tvName.setText(name);
+            Picasso.get().load(image)
+                    .placeholder(R.drawable.default_image)
+                    .into(imageView);
+
+        }
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -91,7 +117,8 @@ public class AfterLoginActivity extends AppCompatActivity
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_log_out) {
-           LoginManager.getInstance().logOut();
+           //TODO manual sign in ho vane logout garda preference clear garera matra beforeLoginActivity Jane
+           LoginManager.getInstance().logOut();//fb sign in vaye
            Intent intent=new Intent(AfterLoginActivity.this, BeforeLoginActivity.class);
            startActivity(intent);
 

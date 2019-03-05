@@ -53,9 +53,8 @@ public class BirthdayPickerFragment extends Fragment {
                     int month=datePicker.getMonth()+1;
                     int year=datePicker.getYear();
                     Bundle bundle=new Bundle();
-                    bundle.putInt("day", day);
-                    bundle.putInt("month", month);
-                    bundle.putInt("year", year);
+                    String bday=Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year);
+                    bundle.putString("birthday", bday);
                     listener.onButtonClicked(R.id.btn_bday_picker_next, new CustomAtrributePickerFragment(), bundle);
                 }
             }
