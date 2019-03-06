@@ -26,6 +26,7 @@ public class Globals extends Application {
         String mobile=(bundle.getString("mobile")==null)?"":bundle.getString("mobile");
         String id=(bundle.getString("id")==null)?"1":bundle.getString("id");
         String image=(bundle.getString("image")==null)?"R.drawable.default_image":bundle.getString("image");
+        String blood=(bundle.getString("blood"))==null?"not set yet":bundle.getString("blood");
 
         user.setName(bundle.getString("name"));
         user.setId(id);
@@ -37,7 +38,7 @@ public class Globals extends Application {
         user.setHeight(height);
         user.setWeight(weight);
         user.setMobileNumber(mobile);
-        user.setBloodGroup("not set yet");
+        user.setBloodGroup(blood);
         return user;
     }
 

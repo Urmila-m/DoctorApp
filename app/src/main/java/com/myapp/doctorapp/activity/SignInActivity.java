@@ -57,11 +57,11 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
         }
 
         Log.e("TAG", "onCreate: "+preferences.getString("email", ""));
-//        boolean preferenceEmpty=preferences.getString("email", "").equals("")?true:false;
-//        if (!preferenceEmpty){
-//            startActivity(new Intent(this, AfterLoginActivity.class));
-//            finish();
-//        }
+        String preferenceEmpty=preferences.getString("email", "");
+        if (!preferenceEmpty.equals("")){
+            startActivity(new Intent(this, AfterLoginActivity.class));
+            finish();
+        }
 
         tvCreateAccount =findViewById(R.id.tv_sign_in_create_account);
         btnManualSignIn=findViewById(R.id.btn_manual_sign_in);

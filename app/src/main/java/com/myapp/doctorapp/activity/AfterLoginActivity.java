@@ -132,8 +132,8 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_log_out) {
-           editor.clear();//clear vaira xaina
-           editor.remove("email");
+           editor.clear().commit();
+//           editor.remove("email");
            LoginManager.getInstance().logOut();//fb sign in vaye
            Intent intent=new Intent(AfterLoginActivity.this, SignInActivity.class);
            startActivity(intent);
@@ -157,14 +157,9 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
 
         else if (id==R.id.btn_edit_profile_update){
 
-//            Log.e("TAG", "onButtonClicked: bloodgroup"+bundle.getString("blood"));
-            editor.putString("weight", bundle.getString("weight"));
-            editor.putString("height", bundle.getString("height"));
-            editor.putString("blood", bundle.getString("blood"));
-
-//            Log.e("TAG", "onButtonClicked: "+preferences.getString("weight", "")+"\n"+
-//                    preferences.getString("height", "")+"\n"+
-//                    preferences.getString("blood", ""));
+            editor.putString("weight", bundle.getString("weight")).commit();
+            editor.putString("height", bundle.getString("height")).commit();
+            editor.putString("blood", bundle.getString("blood")).commit();
 
             apiTask.updateProfile(bundle.getString("height"),
                     bundle.getString("weight"),
