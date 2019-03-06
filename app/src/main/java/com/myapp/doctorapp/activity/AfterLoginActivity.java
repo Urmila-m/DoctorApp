@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -16,12 +14,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Adapter;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
-import com.myapp.doctorapp.DoctorAdapter;
 import com.myapp.doctorapp.R;
 import com.myapp.doctorapp.backgroundtasks.ApiBackgroundTask;
 import com.myapp.doctorapp.fragments.FindDoctorFragment;
@@ -29,11 +25,7 @@ import com.myapp.doctorapp.fragments.HomeFragment;
 import com.myapp.doctorapp.fragments.ProfileFragment;
 import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
-import com.myapp.doctorapp.model.Doctor;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -140,11 +132,10 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_log_out) {
-           //TODO manual sign in ho vane logout garda preference clear garera matra beforeLoginActivity Jane
-           editor.clear();
+           editor.clear();//clear vaira xaina
            editor.remove("email");
            LoginManager.getInstance().logOut();//fb sign in vaye
-           Intent intent=new Intent(AfterLoginActivity.this, BeforeLoginActivity.class);
+           Intent intent=new Intent(AfterLoginActivity.this, SignInActivity.class);
            startActivity(intent);
            finish();
 
@@ -166,9 +157,14 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
 
         else if (id==R.id.btn_edit_profile_update){
 
+//            Log.e("TAG", "onButtonClicked: bloodgroup"+bundle.getString("blood"));
             editor.putString("weight", bundle.getString("weight"));
             editor.putString("height", bundle.getString("height"));
             editor.putString("blood", bundle.getString("blood"));
+
+//            Log.e("TAG", "onButtonClicked: "+preferences.getString("weight", "")+"\n"+
+//                    preferences.getString("height", "")+"\n"+
+//                    preferences.getString("blood", ""));
 
             apiTask.updateProfile(bundle.getString("height"),
                     bundle.getString("weight"),

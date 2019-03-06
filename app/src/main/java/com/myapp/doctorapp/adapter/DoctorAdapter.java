@@ -1,4 +1,4 @@
-package com.myapp.doctorapp;
+package com.myapp.doctorapp.adapter;
 
 import android.content.Context;
 import android.media.Rating;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.myapp.doctorapp.R;
 import com.myapp.doctorapp.model.Doctor;
 import com.squareup.picasso.Picasso;
 

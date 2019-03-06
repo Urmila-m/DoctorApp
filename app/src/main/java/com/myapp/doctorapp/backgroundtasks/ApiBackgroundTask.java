@@ -7,10 +7,12 @@ import com.myapp.doctorapp.interfaces.ApiInterface;
 import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.model.Doctor;
 import com.myapp.doctorapp.model.EmailPasswordResponse;
+import com.myapp.doctorapp.model.IdModel;
 import com.myapp.doctorapp.model.PostResponse;
 import com.myapp.doctorapp.model.User;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -19,9 +21,11 @@ import retrofit2.Response;
 
 import static com.myapp.doctorapp.Globals.API_GET_DOCTOR_LIST;
 import static com.myapp.doctorapp.Globals.API_GET_EMAIL;
+import static com.myapp.doctorapp.Globals.API_GET_ID_LIST;
 import static com.myapp.doctorapp.Globals.API_GET_USER;
 import static com.myapp.doctorapp.Globals.API_INSERT;
 import static com.myapp.doctorapp.Globals.API_UPDATE_PROFILE;
+import static com.myapp.doctorapp.Globals.GET_USER_USING_ID;
 import static com.myapp.doctorapp.Globals.anInt;
 
 public class ApiBackgroundTask {
@@ -144,6 +148,44 @@ public class ApiBackgroundTask {
                 @Override
                 public void onFailure(Call<PostResponse> call, Throwable t) {
                     Log.e("TAG", "onFailure: "+t.getMessage() );
+                }
+            });
+        }
+    }
+
+    public  void getIdList(final OnDataRetrievedListener listener){
+        if (listener!=null){
+           apiInterface.getIdList("getIdList").enqueue(new Callback<List<IdModel>>() {
+               @Override
+               public void onResponse(Call<List<IdModel>> call, Response<List<IdModel>> response) {
+                   List<IdModel> idList=response.body();
+                   Bundle bundle=new Bundle();
+                   bundle.putSerializable("id_list", (Serializable) idList);
+                   listener.onDataRetrieved(API_GET_ID_LIST, bundle);
+               }
+
+               @Override
+               public void onFailure(Call<List<IdModel>> call, Throwable t) {
+                   Log.e("TAG", "onFailure: "+t.getMessage() );
+               }
+           });
+        }
+    }
+
+    public void getUserUsingId(String id, final OnDataRetrievedListener listener){
+        if (listener!=null){
+            apiInterface.getUserUsingId("getRecordWithId", id).enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    User user=response.body();
+                    Bundle bundle=new Bundle();
+                    bundle.putSerializable("user", user);
+                    listener.onDataRetrieved(GET_USER_USING_ID, bundle);
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    Log.e("TAG", "onFailure: "+t.getMessage());
                 }
             });
         }

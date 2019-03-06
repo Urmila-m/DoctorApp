@@ -11,11 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.myapp.doctorapp.DoctorAdapter;
+import com.myapp.doctorapp.adapter.DoctorAdapter;
 import com.myapp.doctorapp.R;
 import com.myapp.doctorapp.model.Doctor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FindDoctorFragment extends Fragment {

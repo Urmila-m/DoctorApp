@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.myapp.doctorapp.model.Doctor;
 import com.myapp.doctorapp.model.EmailPasswordResponse;
+import com.myapp.doctorapp.model.IdModel;
 import com.myapp.doctorapp.model.PostResponse;
 import com.myapp.doctorapp.model.User;
 
@@ -51,5 +52,14 @@ public interface ApiInterface {
                                      @Field("height") String height,
                                      @Field("blood") String bloodGroup,
                                      @Field("email") String email);
+
+    @POST("doctorAppAPI.php")
+    @FormUrlEncoded
+    Call<List<IdModel>> getIdList(@Field("action") String getIdList);
+
+    @POST("doctorAppAPI.php")
+    @FormUrlEncoded
+    Call<User> getUserUsingId(@Field("action") String getRecordWithId,
+                       @Field("id") String id);
 
 }

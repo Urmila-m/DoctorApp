@@ -99,8 +99,6 @@ public class ManualSignUpFragment extends Fragment {
                         listener.onButtonClicked(R.id.btn_sign_up_form, new BirthdayPickerFragment(), bundle);
                     }
                 }
-
-
             }
         });
     }
