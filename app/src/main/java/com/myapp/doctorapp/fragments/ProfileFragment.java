@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.myapp.doctorapp.R;
@@ -22,12 +23,13 @@ import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProfileFragment  extends Fragment {
+public class ProfileFragment  extends Fragment implements View.OnClickListener {
 
     private OnFragmentButtonClickListener listener;
     TextView tvName, tvBlood, tvAge, tvWeight, tvHeight, tvGender;
     CircleImageView imageView;
     Bundle bundle;
+    Button btnEditProfile;
 
     public ProfileFragment() {
         //required empty constructor
@@ -59,6 +61,7 @@ public class ProfileFragment  extends Fragment {
         tvHeight=view.findViewById(R.id.tv_height_profile);
         tvWeight=view.findViewById(R.id.tv_weight_profile);
         imageView=view.findViewById(R.id.iv_profile_image);
+        btnEditProfile=view.findViewById(R.id.btn_edit_profile);
     }
 
     @Override
@@ -72,6 +75,7 @@ public class ProfileFragment  extends Fragment {
         tvGender.setText(bundle.getString("gender"));
         tvBlood.setText(bundle.getString("blood"));
         tvAge.setText(birthday);
+        btnEditProfile.setOnClickListener(this);
 
         Picasso.get().load(bundle.getString("image")).placeholder(R.drawable.default_image).into(imageView);
     }
@@ -95,5 +99,10 @@ public class ProfileFragment  extends Fragment {
         long m=ageInMilliSec/(1000*60);
         int age= (int) (m/(60*24*365));
         return age;
+    }
+
+    @Override
+    public void onClick(View v) {
+        listener.onButtonClicked(btnEditProfile.getId(), new EditProfileFragment(), new Bundle());
     }
 }

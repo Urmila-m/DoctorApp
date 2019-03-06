@@ -55,6 +55,7 @@
         <TextView
             android:id="@+id/tv_doctor_adapter_name"
             style="@style/title_style"
+            android:textSize="@dimen/normal_text_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/vivek_kumar" />
@@ -66,6 +67,7 @@
             android:text="@string/peditrician" />
 
         <LinearLayout
+            android:gravity="left|center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -82,7 +84,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/all_padding"
                 android:text="@string/hospital_name"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:layout_gravity="center"/>
         </LinearLayout>
 
     </LinearLayout>

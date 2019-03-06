@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/base_layout_style">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/margin_20">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            style="@style/title_style"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:text="@string/weight"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            style="@style/title_style"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:text="@string/height"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            style="@style/title_style"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:text="@string/blood_group"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="horizontal"
+        android:background="@drawable/grey_border_background"
+        android:padding="@dimen/all_padding">
+
+        <NumberPicker
+            android:id="@+id/np_edit_weight"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/all_padding"
+            android:divider="@color/color_transparent"
+            />
+
+        <NumberPicker
+            android:id="@+id/np_edit_height"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/all_padding"
+            android:divider="@color/color_transparent"
+
+            />
+
+        <NumberPicker
+            android:id="@+id/np_blood_group"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/all_padding"
+            android:divider="@color/color_transparent"
+
+            />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_edit_profile_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/button_style"
+        android:text="@string/update"/>
+
+</LinearLayout>

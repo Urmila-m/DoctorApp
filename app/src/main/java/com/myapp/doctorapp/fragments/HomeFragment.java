@@ -11,13 +11,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.common.api.Api;
 import com.myapp.doctorapp.R;
+import com.myapp.doctorapp.backgroundtasks.ApiBackgroundTask;
+import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
 
 public class HomeFragment extends Fragment {
 
     OnFragmentButtonClickListener listener;
     LinearLayout findDoctorBlock;
+    Context context;
 
     public HomeFragment() {
         //required empty public constructor
@@ -33,7 +37,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.e("TAG", "onAttach: "+context);
+        this.context=context;
         if (context instanceof OnFragmentButtonClickListener){
             listener= (OnFragmentButtonClickListener) context;
         }

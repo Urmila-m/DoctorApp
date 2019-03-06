@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.myapp.doctorapp.interfaces.ApiInterface;
 import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
+import com.myapp.doctorapp.model.Doctor;
 import com.myapp.doctorapp.model.EmailPasswordResponse;
 import com.myapp.doctorapp.model.PostResponse;
 import com.myapp.doctorapp.model.User;
@@ -16,9 +17,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.myapp.doctorapp.Globals.API_GET_DOCTOR_LIST;
 import static com.myapp.doctorapp.Globals.API_GET_EMAIL;
 import static com.myapp.doctorapp.Globals.API_GET_USER;
 import static com.myapp.doctorapp.Globals.API_INSERT;
+import static com.myapp.doctorapp.Globals.API_UPDATE_PROFILE;
 import static com.myapp.doctorapp.Globals.anInt;
 
 public class ApiBackgroundTask {
@@ -102,6 +105,45 @@ public class ApiBackgroundTask {
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
                     Log.e("TAG", "onFailure: "+t.getMessage());
+                }
+            });
+        }
+    }
+
+    public void getDoctorList(final OnDataRetrievedListener listener){
+        if (listener!=null){
+            apiInterface.getDoctorList("getDoctorList").enqueue(new Callback<List<Doctor>>() {
+                @Override
+                public void onResponse(Call<List<Doctor>> call, Response<List<Doctor>> response) {
+                    List<Doctor> list=response.body();
+                    Bundle bundle=new Bundle();
+                    bundle.putSerializable("doctor_list", (Serializable) list);
+                    listener.onDataRetrieved(API_GET_DOCTOR_LIST, bundle);
+                }
+
+                @Override
+                public void onFailure(Call<List<Doctor>> call, Throwable t) {
+                    Log.e("TAG", "onFailure: "+t.getMessage());
+                }
+            });
+        }
+    }
+
+    public void updateProfile(String height, String weight, String bloodGroup, String email, final OnDataRetrievedListener listener){
+        if (listener!=null){
+            apiInterface.updateProfile("editProfile", weight, height, bloodGroup, email).enqueue(new Callback<PostResponse>() {
+                @Override
+                public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                    PostResponse feedback=response.body();
+                    Bundle bundle=new Bundle();
+                    bundle.putBoolean("success", feedback.isSuccess());
+                    bundle.putString("errorMsg", feedback.getErrorMsg());
+                    listener.onDataRetrieved(API_UPDATE_PROFILE, bundle);
+                }
+
+                @Override
+                public void onFailure(Call<PostResponse> call, Throwable t) {
+                    Log.e("TAG", "onFailure: "+t.getMessage() );
                 }
             });
         }

@@ -2,6 +2,7 @@ package com.myapp.doctorapp.interfaces;
 
 import android.os.Bundle;
 
+import com.myapp.doctorapp.model.Doctor;
 import com.myapp.doctorapp.model.EmailPasswordResponse;
 import com.myapp.doctorapp.model.PostResponse;
 import com.myapp.doctorapp.model.User;
@@ -38,5 +39,17 @@ public interface ApiInterface {
     @FormUrlEncoded
     Call<User> getUser(@Field("action") String getRecordWithEmail,
                        @Field("email") String email);
+
+    @POST("doctorAppAPI.php")
+    @FormUrlEncoded
+    Call<List<Doctor>> getDoctorList(@Field("action") String getDoctorList);
+
+    @POST("doctorAppAPI.php")
+    @FormUrlEncoded
+    Call<PostResponse> updateProfile(@Field("action") String editProfile,
+                                     @Field("weight") String weight,
+                                     @Field("height") String height,
+                                     @Field("blood") String bloodGroup,
+                                     @Field("email") String email);
 
 }

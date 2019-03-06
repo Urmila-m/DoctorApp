@@ -44,7 +44,7 @@ public class DoctorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         h.tvHospital.setText(doctor.getHospital());
         h.tvSpeciality.setText(doctor.getSpeciality());
 
-        Picasso.get().load(doctor.getImage()).into(h.circleImageView);
+        Picasso.get().load(doctor.getImage()).placeholder(R.drawable.default_image).into(h.circleImageView);
         h.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

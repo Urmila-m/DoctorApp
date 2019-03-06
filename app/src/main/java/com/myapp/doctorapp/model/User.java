@@ -23,6 +23,33 @@ public class User implements Serializable {
 
     private String Password;
 
+    private String BloodGroup;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "MobileNumber='" + MobileNumber + '\'' +
+                ", Email='" + Email + '\'' +
+                ", DOB='" + DOB + '\'' +
+                ", Height='" + Height + '\'' +
+                ", id='" + id + '\'' +
+                ", Gender='" + Gender + '\'' +
+                ", Image='" + Image + '\'' +
+                ", Weight='" + Weight + '\'' +
+                ", Name='" + Name + '\'' +
+                ", Password='" + Password + '\'' +
+                ", BloodGroup='" + BloodGroup + '\'' +
+                '}';
+    }
+
+    public String getBloodGroup() {
+        return BloodGroup;
+    }
+
+    public void setBloodGroup(String bloodGroup) {
+        BloodGroup = bloodGroup;
+    }
+
     public String getMobileNumber ()
     {
         return MobileNumber;
@@ -123,9 +150,4 @@ public class User implements Serializable {
         this.Password = Password;
     }
 
-    @Override
-    public String toString()
-    {
-        return "ClassPojo [MobileNumber = "+MobileNumber+", Email = "+Email+", DOB = "+DOB+", Height = "+Height+", id = "+id+", Gender = "+Gender+", Image = "+Image+", Weight = "+Weight+", Name = "+Name+", Password = "+Password+"]";
-    }
 }

@@ -9,9 +9,7 @@ import android.util.Log;
 
 import com.myapp.doctorapp.R;
 import com.myapp.doctorapp.backgroundtasks.ApiBackgroundTask;
-import com.myapp.doctorapp.backgroundtasks.SignUpWithFacebookTask;
 import com.myapp.doctorapp.fragments.SignInFragment;
-import com.myapp.doctorapp.fragments.SignUpOptionsFragment;
 import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
 import com.myapp.doctorapp.model.EmailPasswordResponse;
@@ -24,7 +22,6 @@ import static com.myapp.doctorapp.Globals.API_GET_EMAIL;
 import static com.myapp.doctorapp.Globals.API_GET_USER;
 import static com.myapp.doctorapp.Globals.API_INSERT;
 import static com.myapp.doctorapp.Globals.SIGNUP;
-import static com.myapp.doctorapp.Globals.anInt;
 
 public class BeforeLoginActivity extends PreferenceInitializingActivity implements OnFragmentButtonClickListener, OnDataRetrievedListener {
 
@@ -77,8 +74,13 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
             if (id==R.id.btn_manual_sign_in){
                 email=bundle.getString("email");
                 password=bundle.getString("password");
-                Log.e("TAG", "onButtonClicked: "+email);
-                apiTask.getEmailPassword(this);
+                if (password.equals("")){
+                    Log.e("TAG", "onButtonClicked: Fill the password!!");
+                }
+                else {
+                    Log.e("TAG", "onButtonClicked: " + email);
+                    apiTask.getEmailPassword(this);
+                }
             }
             else {
                 if (id==R.id.btn_sign_up_options_fb) {
@@ -111,13 +113,13 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
            for (EmailPasswordResponse response: list
            ) {
                if(response.getEmail().equals(email)&&response.getPassword().equals(password)){
-                   apiTask.getUser(email, this);
+                   apiTask.getUser(email, this);//TODO email register vako xa xaina xuttai check garne ani password
                    count++;
                    break;
                }
            }
            if (count==0){
-               Log.e("TAG", "onDataRetrieved: "+email+" doesnt have account yet!!");
+               Log.e("TAG", "onDataRetrieved: "+email+" doesnt have account yet!! or password incorrect");
            }
        }
 
@@ -161,6 +163,7 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
         editor.putString("weight", user.getWeight());
         editor.putString("image", user.getImage());
         editor.putString("password", user.getPassword());
+        editor.putString("blood", user.getBloodGroup());
         editor.commit();
     }
 
@@ -183,6 +186,7 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
         user.setHeight(height);
         user.setWeight(weight);
         user.setMobileNumber(mobile);
+        user.setBloodGroup("not set yet");
         return user;
     }
 }

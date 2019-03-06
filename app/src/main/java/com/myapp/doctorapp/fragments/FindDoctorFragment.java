@@ -25,6 +25,7 @@ public class FindDoctorFragment extends Fragment {
     List<Doctor> list;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
+    Bundle bundle;
 
     public FindDoctorFragment() {
         //required empty constructor
@@ -36,24 +37,18 @@ public class FindDoctorFragment extends Fragment {
         this.context=context;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        bundle=getArguments();
+        list= (List<Doctor>) bundle.getSerializable("doctor_list");
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.find_doctor_fragment_layout, container, false);
-        list=new ArrayList<>();
         layoutManager=new LinearLayoutManager(context);
-        Doctor doctor=new Doctor("Rajesh", "https://i.imgur.com/tGbaZCY.jpg", "Patan Hospital, Lagankhel","ENT", 12,4 );
-        list.add(doctor);
-        list.add(doctor);
-        list.add(doctor);
-        list.add(doctor);
-        list.add(doctor);
-        list.add(doctor);
-        list.add(doctor);
-        list.add(doctor);
-        list.add(doctor);
-        list.add(doctor);
-        list.add(doctor);
         adapter=new DoctorAdapter(list, getContext());
         return view;
     }

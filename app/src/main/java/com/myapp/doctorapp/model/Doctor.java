@@ -1,6 +1,8 @@
 package com.myapp.doctorapp.model;
 
-public class Doctor {
+import java.io.Serializable;
+
+public class Doctor implements Serializable {
 
     private String name, image, hospital, speciality;
     private int id, rating;

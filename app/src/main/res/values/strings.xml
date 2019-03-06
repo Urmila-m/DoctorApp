@@ -102,5 +102,11 @@
     <string name="account_settings">Account Settings</string>
     <string name="log_out">Log out</string>
     <string name="user">User</string>
+    <string name="edit_profile">Edit Profile</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="blood_group">Blood Group</string>
+    <string name="update">Update</string>
 
 </resources>

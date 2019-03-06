@@ -44,13 +44,13 @@ public class CustomAtrributePickerFragment extends Fragment {
         npGender=view.findViewById(R.id.np_gender);
         btnNext=view.findViewById(R.id.btn_custom_attribute_picker);
 
-        npHeight.setMinValue(50);
+        npHeight.setMinValue(0);
         npHeight.setMaxValue(150);
         npHeight.setValue(100);
         npHeight.setWrapSelectorWheel(false);
 
-        npWeight.setMaxValue(80);
-        npWeight.setMinValue(40);
+        npWeight.setMaxValue(100);
+        npWeight.setMinValue(0);
         npWeight.setValue(60);
         npWeight.setWrapSelectorWheel(false);
 

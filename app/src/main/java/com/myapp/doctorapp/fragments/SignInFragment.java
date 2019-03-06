@@ -82,6 +82,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
         }
         else if(v==signInFb){
             //TODO FacebookTask chainxa, tyabata aako email ra database ma vako email compare garne, milyo vane afterloginActivity
+
         }
     }
 }

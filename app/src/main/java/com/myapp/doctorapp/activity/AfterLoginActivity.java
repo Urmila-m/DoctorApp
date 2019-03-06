@@ -23,24 +23,32 @@ import android.widget.TextView;
 import com.facebook.login.LoginManager;
 import com.myapp.doctorapp.DoctorAdapter;
 import com.myapp.doctorapp.R;
+import com.myapp.doctorapp.backgroundtasks.ApiBackgroundTask;
+import com.myapp.doctorapp.fragments.FindDoctorFragment;
 import com.myapp.doctorapp.fragments.HomeFragment;
 import com.myapp.doctorapp.fragments.ProfileFragment;
+import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
+import com.myapp.doctorapp.model.Doctor;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.myapp.doctorapp.Globals.API_GET_DOCTOR_LIST;
+import static com.myapp.doctorapp.Globals.API_UPDATE_PROFILE;
+
 public class AfterLoginActivity extends PreferenceInitializingActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnFragmentButtonClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnFragmentButtonClickListener, OnDataRetrievedListener {
 
     CircleImageView imageView, imageProfile;
     TextView tvName;
     TextView tvEmail;
     FrameLayout frameLayout;
-
-    TextView tvNameProfile, tvAge, tvHeight, tvWeight, tvGender, tvBlood;
+    ApiBackgroundTask apiTask;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +67,8 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
             }
         });
 
+        apiTask=new ApiBackgroundTask();
+
         View view=findViewById(R.id.dl_content);
         View view1=view.findViewById(R.id.include_after_login);
         frameLayout=view1.findViewById(R.id.fl_after_login_content);
@@ -71,15 +81,13 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         imageView=navigationView.getHeaderView(0).findViewById(R.id.nav_header_image);
         tvName=navigationView.getHeaderView(0).findViewById(R.id.tv_nav_header_name);
         tvEmail=navigationView.getHeaderView(0).findViewById(R.id.tv_nav_header_email);
 
         setNavHeaderElements();
         navigationView.setNavigationItemSelectedListener(this);
-
-
 
     }
 
@@ -138,6 +146,7 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
            LoginManager.getInstance().logOut();//fb sign in vaye
            Intent intent=new Intent(AfterLoginActivity.this, BeforeLoginActivity.class);
            startActivity(intent);
+           finish();
 
         }
 
@@ -148,7 +157,29 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
 
     @Override
     public void onButtonClicked(int id, Fragment fragment, Bundle bundle) {
-        getSupportFragmentManager().beginTransaction().replace(frameLayout.getId(), fragment).addToBackStack(null).commit();
+        if (id==R.id.find_doctor_block) {
+            apiTask.getDoctorList(this);
+        }
+        else if (id==R.id.btn_edit_profile){
+            getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).commit();
+        }
+
+        else if (id==R.id.btn_edit_profile_update){
+
+            editor.putString("weight", bundle.getString("weight"));
+            editor.putString("height", bundle.getString("height"));
+            editor.putString("blood", bundle.getString("blood"));
+
+            apiTask.updateProfile(bundle.getString("height"),
+                    bundle.getString("weight"),
+                    bundle.getString("blood"),
+                    preferences.getString("email", ""),
+                    this);
+
+            navigationView.setCheckedItem(R.id.nav_home);
+            getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).commit();
+        }
+
     }
 
     void setNavHeaderElements(){
@@ -171,8 +202,20 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         bundle.putString("height",preferences.getString("height", ""));
         bundle.putString("gender",preferences.getString("gender", ""));
         bundle.putString("birthday",preferences.getString("dob", ""));
-        bundle.putString("blood", "AB+");//TODO this field needs to be added in database
-
+        bundle.putString("blood", preferences.getString("blood", ""));
         return bundle;
+    }
+
+    @Override
+    public void onDataRetrieved(String source, Bundle bundle) {
+        if (source==API_GET_DOCTOR_LIST) {
+            FindDoctorFragment fragment = new FindDoctorFragment();
+            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(frameLayout.getId(), fragment).addToBackStack(null).commit();
+        }
+        else if (source==API_UPDATE_PROFILE){
+            Log.e("TAG", "onDataRetrieved: "+bundle.getString("errorMsg"));
+        }
+
     }
 }
