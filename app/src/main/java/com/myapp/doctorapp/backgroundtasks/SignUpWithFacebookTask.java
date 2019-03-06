@@ -1,7 +1,8 @@
-package com.myapp.doctorapp;
+package com.myapp.doctorapp.backgroundtasks;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.facebook.CallbackManager;
@@ -12,6 +13,7 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
+import static com.myapp.doctorapp.Globals.SIGNUP;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,14 +22,13 @@ import java.util.Arrays;
 
 public class SignUpWithFacebookTask {
 
-    private static final String CLASS_NAME="SignUpWithFacebookTask";
     private static final String EMAIL = "email";
     private static final String PROFILE="public_profile";
     private static final String GENDER="user_gender";
     private static final String BIRTHDAY="user_birthday";
 
     private CallbackManager callbackManager;
-    private Activity activity;
+    private AppCompatActivity activity;
     private FacebookCallback<LoginResult> fbCallback;
     private LoginManager loginManager;
     private OnDataRetrievedListener listener;
@@ -36,7 +37,7 @@ public class SignUpWithFacebookTask {
         return callbackManager;
     }
 
-    public SignUpWithFacebookTask(Activity activity){
+    public SignUpWithFacebookTask(AppCompatActivity activity){
         Log.e("TAG", "SignUpWithFacebookTask: constructor called");
         this.activity=activity;
         loginManager=LoginManager.getInstance();
@@ -101,11 +102,12 @@ public class SignUpWithFacebookTask {
                                 bundle.putString("birthday", birthday);
                                 bundle.putString("email", email);
                                 bundle.putString("image", image_url);
-                                listener.onDataRetrieved(CLASS_NAME, bundle);
+                                listener.onDataRetrieved(SIGNUP, bundle);
                             }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            Log.e("TAG", "onCompleted: JSON exception"+e.getMessage());
                         }
                     }
                 });

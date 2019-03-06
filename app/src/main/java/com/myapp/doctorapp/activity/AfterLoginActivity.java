@@ -1,35 +1,46 @@
-package com.myapp.doctorapp;
+package com.myapp.doctorapp.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.widget.Adapter;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
+import com.myapp.doctorapp.DoctorAdapter;
+import com.myapp.doctorapp.R;
+import com.myapp.doctorapp.fragments.HomeFragment;
+import com.myapp.doctorapp.fragments.ProfileFragment;
+import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
 import com.squareup.picasso.Picasso;
 
-import java.util.Set;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AfterLoginActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class AfterLoginActivity extends PreferenceInitializingActivity
+        implements NavigationView.OnNavigationItemSelectedListener, OnFragmentButtonClickListener {
 
-    CircleImageView imageView;
+    CircleImageView imageView, imageProfile;
     TextView tvName;
+    TextView tvEmail;
+    FrameLayout frameLayout;
+
+    TextView tvNameProfile, tvAge, tvHeight, tvWeight, tvGender, tvBlood;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +59,12 @@ public class AfterLoginActivity extends AppCompatActivity
             }
         });
 
+        View view=findViewById(R.id.dl_content);
+        View view1=view.findViewById(R.id.include_after_login);
+        frameLayout=view1.findViewById(R.id.fl_after_login_content);
+
+        getSupportFragmentManager().beginTransaction().replace(frameLayout.getId(), new HomeFragment()).commit();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -57,19 +74,13 @@ public class AfterLoginActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         imageView=navigationView.getHeaderView(0).findViewById(R.id.nav_header_image);
         tvName=navigationView.getHeaderView(0).findViewById(R.id.tv_nav_header_name);
+        tvEmail=navigationView.getHeaderView(0).findViewById(R.id.tv_nav_header_email);
 
-        //TODO intent ko satta preference bata data load garaune
-        Bundle bundle=getIntent().getBundleExtra("data");
-        if (bundle!=null) {
-            String image = bundle.getString("image");
-            String name = bundle.getString("name");
-            tvName.setText(name);
-            Picasso.get().load(image)
-                    .placeholder(R.drawable.default_image)
-                    .into(imageView);
-
-        }
+        setNavHeaderElements();
         navigationView.setNavigationItemSelectedListener(this);
+
+
+
     }
 
     @Override
@@ -110,14 +121,20 @@ public class AfterLoginActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-       if (id == R.id.nav_gallery) {
+       if (id == R.id.nav_profile) {
+           ProfileFragment fragment=new ProfileFragment();
+           fragment.setArguments(preferenceToBundle());
+           getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).addToBackStack(null).commit();
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_home) {
+           getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), new HomeFragment()).commit();
 
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_log_out) {
            //TODO manual sign in ho vane logout garda preference clear garera matra beforeLoginActivity Jane
+           editor.clear();
+           editor.remove("email");
            LoginManager.getInstance().logOut();//fb sign in vaye
            Intent intent=new Intent(AfterLoginActivity.this, BeforeLoginActivity.class);
            startActivity(intent);
@@ -127,5 +144,35 @@ public class AfterLoginActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onButtonClicked(int id, Fragment fragment, Bundle bundle) {
+        getSupportFragmentManager().beginTransaction().replace(frameLayout.getId(), fragment).addToBackStack(null).commit();
+    }
+
+    void setNavHeaderElements(){
+        String image=preferences.getString("image", "");
+        String name=preferences.getString("name", "");
+        String email=preferences.getString("email", "");
+        tvName.setText(name);
+        tvEmail.setText(email);
+        Picasso.get().load(image)
+                .placeholder(R.drawable.default_image)
+                .into(imageView);
+
+    }
+
+    Bundle preferenceToBundle(){//only the values needed to be passed to ProfileFragment
+        Bundle bundle=new Bundle();
+        bundle.putString("name",preferences.getString("name", ""));
+        bundle.putString("image",preferences.getString("image", ""));
+        bundle.putString("weight",preferences.getString("weight", ""));
+        bundle.putString("height",preferences.getString("height", ""));
+        bundle.putString("gender",preferences.getString("gender", ""));
+        bundle.putString("birthday",preferences.getString("dob", ""));
+        bundle.putString("blood", "AB+");//TODO this field needs to be added in database
+
+        return bundle;
     }
 }

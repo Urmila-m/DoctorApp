@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#0a718a</color>
     <color name="grey">#808080</color>
+    <color name="transparent_grey">#80808080</color>
     <color name="gradient_start">#0d42ba</color>
     <color name="gradient_end">#0dba86</color>
     <color name="gradient_center">#0d98ba</color>

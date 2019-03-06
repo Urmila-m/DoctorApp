@@ -12,6 +12,7 @@
         style="@style/title_style"/>
 
     <EditText
+        android:id="@+id/et_email_sign_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/edit_text_style"
@@ -19,34 +20,35 @@
         />
 
     <EditText
+        android:id="@+id/et_password_sign_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/edit_text_style"
         android:hint="@string/password"
         />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/margin_20">
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_marginTop="@dimen/margin_20">-->
 
-        <RadioButton
-            android:id="@+id/rb_remember_sign_in"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:checked="true"
-            android:text="@string/remember"/>
+        <!--<RadioButton-->
+            <!--android:id="@+id/rb_remember_sign_in"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:checked="true"-->
+            <!--android:text="@string/remember"/>-->
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/forgot_password"/>
+        <!--<TextView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:gravity="center"-->
+            <!--android:text="@string/forgot_password"/>-->
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
     <Button
         android:id="@+id/btn_manual_sign_in"

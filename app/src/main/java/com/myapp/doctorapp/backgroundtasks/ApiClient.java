@@ -1,4 +1,4 @@
-package com.myapp.doctorapp;
+package com.myapp.doctorapp.backgroundtasks;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

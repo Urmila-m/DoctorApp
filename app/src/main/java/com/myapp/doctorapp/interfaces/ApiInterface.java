@@ -2,7 +2,11 @@ package com.myapp.doctorapp.interfaces;
 
 import android.os.Bundle;
 
+import com.myapp.doctorapp.model.EmailPasswordResponse;
 import com.myapp.doctorapp.model.PostResponse;
+import com.myapp.doctorapp.model.User;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -13,8 +17,7 @@ public interface ApiInterface {
 
     @POST("doctorAppAPI.php")
     @FormUrlEncoded
-    Call<PostResponse
-            > insertData(@Field("action") String insert,
+    Call<PostResponse> insertData(@Field("action") String insert,
                                   @Field("name") String name,
                                   @Field("mobile") String mobile,
                                   @Field("id") String id,
@@ -26,9 +29,14 @@ public interface ApiInterface {
                                   @Field("image") String image,
                                   @Field("email") String email);
 
-//    @POST("doctorAppAPI.php")
-//    @FormUrlEncoded
-//    Call<PostResponse> insertData(@Field("action") String insert,
-//                                  @Field("user_data") Bundle bundle);
+
+    @POST("doctorAppAPI.php")
+    @FormUrlEncoded
+    Call<List<EmailPasswordResponse>> getEmailPasswordList(@Field("action") String getEmailList);
+
+    @POST("doctorAppAPI.php")
+    @FormUrlEncoded
+    Call<User> getUser(@Field("action") String getRecordWithEmail,
+                       @Field("email") String email);
 
 }

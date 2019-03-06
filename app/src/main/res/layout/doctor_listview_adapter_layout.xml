@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView android:layout_width="match_parent"
+    android:layout_height="110dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="@dimen/elevation"
+    app:cardCornerRadius="@dimen/corner_radius"
+    app:cardUseCompatPadding="true"
+    >
+
+<LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="135dp"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:padding="@dimen/all_padding">
+    >
 
     <LinearLayout
         android:layout_width="0dp"
@@ -17,7 +26,7 @@
             android:layout_height="match_parent">
 
             <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/profile_image"
+                android:id="@+id/iv_doctor_adapter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -29,7 +38,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/offline_orange_dot"
+                android:src="@drawable/online_green_dot"
                 android:layout_marginTop="@dimen/margin_20"
                 android:layout_marginLeft="@dimen/all_padding"/>
 
@@ -44,12 +53,14 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tv_doctor_adapter_name"
             style="@style/title_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/vivek_kumar" />
 
         <TextView
+            android:id="@+id/tv_doctor_adapter_speciality"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/peditrician" />
@@ -66,6 +77,7 @@
                 android:layout_gravity="center"/>
 
             <TextView
+                android:id="@+id/tv_doctor_adapter_hospital"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/all_padding"
@@ -113,6 +125,7 @@
                 android:src="@drawable/star_border_icon"/>
 
             <TextView
+                android:id="@+id/tv_doctor_adapter_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/rating"
@@ -124,3 +137,4 @@
     </LinearLayout>
 
 </LinearLayout>
+</android.support.v7.widget.CardView>
