@@ -17,7 +17,9 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.myapp.doctorapp.R;
+import com.myapp.doctorapp.fragments.DatePickerFragment;
 import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
+import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
 import com.myapp.doctorapp.model.Doctor;
 import com.squareup.picasso.Picasso;
 
@@ -29,12 +31,16 @@ import static com.myapp.doctorapp.Globals.ALERT_POP_UP;
 
 public class DoctorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    OnFragmentButtonClickListener listener;
     List<Doctor> list;
     Context context;
 
     public DoctorAdapter(List<Doctor> list, Context context) {
         this.list = list;
         this.context = context;
+        if (context instanceof OnFragmentButtonClickListener){
+            listener= (OnFragmentButtonClickListener) context;
+        }
     }
 
     @NonNull
@@ -73,13 +79,6 @@ public class DoctorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                 Picasso.get().load(doctor.getImage()).placeholder(R.drawable.default_image).into(image);
 
-                bookAppointment.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(context, "book button clicked", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
                 call.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -103,10 +102,21 @@ public class DoctorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 AlertDialog.Builder builder=new AlertDialog.Builder(context)
                         .setView(doctorDetails);
 
-                AlertDialog alertDialog=builder.create();
+                final AlertDialog alertDialog=builder.create();
 
                 alertDialog.show();
                 alertDialog.getWindow().setLayout(width, height);
+
+                bookAppointment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle bundle=new Bundle();
+                        bundle.putString("doctorName", doctor.getName());
+                        Toast.makeText(context, "book button clicked", Toast.LENGTH_SHORT).show();
+                        listener.onButtonClicked(R.id.btn_book_appointment_doctor_info, new DatePickerFragment(), bundle);
+                        alertDialog.dismiss();
+                    }
+                });
 
             }
         });

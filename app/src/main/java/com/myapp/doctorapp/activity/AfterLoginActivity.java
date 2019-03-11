@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.myapp.doctorapp.R;
@@ -43,6 +44,7 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
     FrameLayout frameLayout;
     ApiBackgroundTask apiTask;
     NavigationView navigationView;
+    Bundle timeAndDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,8 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         });
 
         apiTask=new ApiBackgroundTask();
+
+        timeAndDate=new Bundle();
 
         View view=findViewById(R.id.dl_content);
         View view1=view.findViewById(R.id.include_after_login);
@@ -177,6 +181,33 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
                     this);
 
             navigationView.setCheckedItem(R.id.nav_home);
+            getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).commit();
+        }
+
+        else if (id==R.id.btn_date_picker){
+            Toast.makeText(this, "date Picker", Toast.LENGTH_SHORT).show();
+            getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).commit();
+            for (String s:bundle.keySet()
+                 ) {
+                timeAndDate.putString(s, bundle.getString(s));
+            }
+        }
+
+        else if (id==R.id.btn_choose_time){
+//            Toast.makeText(this, "Time Picker", Toast.LENGTH_SHORT).show();
+            getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).commit();
+            for (String s:bundle.keySet()
+            ) {
+                timeAndDate.putString(s, bundle.getString(s));
+            }
+            //TODO send this bundle to database
+        }
+
+        else if (id==R.id.btn_book_appointment_doctor_info){
+            for (String s:bundle.keySet()
+            ) {
+                timeAndDate.putString(s, bundle.getString(s));
+            }
             getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).commit();
         }
 
