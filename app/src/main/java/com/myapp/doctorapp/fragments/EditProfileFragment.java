@@ -21,6 +21,8 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     NumberPicker height, weight, bloodGrp;
     String[] bloodGroup;
     private OnFragmentButtonClickListener listener;
+    Bundle previousValues;
+    String prevHeight, prevWeight, blood;
 
     public EditProfileFragment() {
         // Required empty public constructor
@@ -29,6 +31,10 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        previousValues=getArguments();
+        prevHeight=previousValues.getString("height");
+        prevWeight=previousValues.getString("weight");
+        blood=previousValues.getString("blood");
 
     }
 
@@ -48,19 +54,25 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
         height.setMinValue(0);
         height.setMaxValue(150);
-        height.setValue(100);
+        height.setValue(Integer.parseInt(prevHeight));
         height.setWrapSelectorWheel(false);
 
         weight.setMaxValue(100);
         weight.setMinValue(0);
-        weight.setValue(60);
+        weight.setValue(Integer.parseInt(prevWeight));
         weight.setWrapSelectorWheel(false);
 
         bloodGroup= new String[]{"A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"};
-
+        int intBlood = 0;
+        for (int i=1;i<=8; i++){
+            if (blood.equals(bloodGroup[i-1])){
+                intBlood=i;
+                break;
+            }
+        }
         bloodGrp.setMinValue(1);
         bloodGrp.setMaxValue(8);
-        bloodGrp.setValue(3);
+        bloodGrp.setValue(intBlood);
         bloodGrp.setDisplayedValues(bloodGroup);
 
     }

@@ -4,8 +4,20 @@ import java.io.Serializable;
 
 public class Doctor implements Serializable {
 
-    private String name, image, hospital, speciality;
+    private String name;
+    private String image;
+    private String hospital;
+    private String speciality;
+    private String phone;
     private int id, rating;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public String getSpeciality() {
         return speciality;
@@ -73,6 +85,7 @@ public class Doctor implements Serializable {
                 ", speciality='" + speciality + '\'' +
                 ", id=" + id +
                 ", rating=" + rating +
+                ", phone number=" + phone +
                 '}';
     }
 

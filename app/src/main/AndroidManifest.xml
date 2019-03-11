@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.myapp.doctorapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -23,7 +24,14 @@
         <activity
             android:name=".activity.AfterLoginActivity"
             android:label="@string/title_activity_after_login"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.DIAL"/>-->
+                <!--<data android:host="tel"-->
+                    <!--tools:ignore="AppLinkUrlError" />-->
+                <!--<category android:name="android.intent.category.DEFAULT"/>-->
+            <!--</intent-filter>-->
+        </activity>
         <activity android:name=".activity.MainActivity" />
 
         <meta-data

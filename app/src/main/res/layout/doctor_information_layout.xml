@@ -15,7 +15,7 @@
             android:layout_height="match_parent">
 
             <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/profile_image"
+                android:id="@+id/profile_image_doctor_info"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_centerInParent="true"
@@ -27,7 +27,8 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/online_green_dot"
-                android:layout_alignLeft="@id/profile_image"
+                android:layout_centerHorizontal="true"
+                android:layout_alignLeft="@id/profile_image_doctor_info"
                 android:layout_marginLeft="-10dp"
                 android:layout_centerVertical="true"
                 />
@@ -46,6 +47,7 @@
                     android:src="@drawable/star_border_icon"/>
 
                 <TextView
+                    android:id="@+id/tv_rating_doctor_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/title_style"
@@ -67,6 +69,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_name_doctor_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/title_style"
@@ -75,12 +78,14 @@
                />
 
             <TextView
+                android:id="@+id/tv_speciality_doctor_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/peditrician"
                 />
             <TextView
+                android:id="@+id/tv_hospital_doctor_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -136,6 +141,8 @@
             </LinearLayout>
 
             <LinearLayout
+                android:clickable="true"
+                android:id="@+id/call_doctor_info"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -156,31 +163,42 @@
 
         </LinearLayout>
 
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/all_padding"
-            android:entries="@array/location_list"
-            android:background="@drawable/spinner_background"
-            android:layout_marginBottom="@dimen/all_padding"
-            />
+        <!--<Spinner-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:padding="@dimen/all_padding"-->
+            <!--android:entries="@array/location_list"-->
+            <!--android:background="@drawable/spinner_background"-->
+            <!--android:layout_marginBottom="@dimen/all_padding"-->
+            <!--/>-->
 
-        <Spinner
+        <!--<Spinner-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:padding="@dimen/all_padding"-->
+            <!--android:entries="@array/location_list"-->
+            <!--android:background="@drawable/spinner_background"-->
+            <!--/>-->
+        <Button
+            android:id="@+id/btn_book_appointment_doctor_info"
+            android:layout_marginLeft="@dimen/margin_20"
+            android:layout_marginRight="@dimen/margin_20"
+            android:layout_gravity="bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/all_padding"
-            android:entries="@array/location_list"
-            android:background="@drawable/spinner_background"
-            />
+            style="@style/button_style"
+            android:text="@string/appointment_book"/>
 
     </LinearLayout>
 
-    <Button
-        android:layout_margin="@dimen/margin_20"
-        android:layout_gravity="bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/button_style"
-        android:text="@string/appointment_book"/>
+    <!--<Button-->
+        <!--android:id="@+id/book_appointment_doctor_layout"-->
+        <!--android:layout_marginLeft="@dimen/margin_20"-->
+        <!--android:layout_marginRight="@dimen/margin_20"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--style="@style/button_style"-->
+        <!--android:text="@string/appointment_book"/>-->
 
 </FrameLayout>

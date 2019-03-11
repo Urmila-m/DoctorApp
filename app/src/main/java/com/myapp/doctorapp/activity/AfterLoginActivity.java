@@ -1,6 +1,7 @@
 package com.myapp.doctorapp.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -29,6 +30,7 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.myapp.doctorapp.Globals.ALERT_POP_UP;
 import static com.myapp.doctorapp.Globals.API_GET_DOCTOR_LIST;
 import static com.myapp.doctorapp.Globals.API_UPDATE_PROFILE;
 
@@ -152,18 +154,25 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
             apiTask.getDoctorList(this);
         }
         else if (id==R.id.btn_edit_profile){
-            getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).commit();
+            Bundle previousValues=new Bundle();
+            previousValues.putString("height", preferences.getString("height", ""));
+            previousValues.putString("weight", preferences.getString("weight", ""));
+            previousValues.putString("blood", preferences.getString("blood", ""));
+            fragment.setArguments(previousValues);
+            getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).addToBackStack(null).commit();
         }
 
         else if (id==R.id.btn_edit_profile_update){
 
-            editor.putString("weight", bundle.getString("weight")).commit();
-            editor.putString("height", bundle.getString("height")).commit();
-            editor.putString("blood", bundle.getString("blood")).commit();
+            String height=bundle.getString("height");
+            String weight=bundle.getString("weight");
+            String blood=bundle.getString("blood");
 
-            apiTask.updateProfile(bundle.getString("height"),
-                    bundle.getString("weight"),
-                    bundle.getString("blood"),
+            editor.putString("weight", weight).commit();
+            editor.putString("height", height).commit();
+            editor.putString("blood", blood).commit();
+
+            apiTask.updateProfile(height, weight, blood,
                     preferences.getString("email", ""),
                     this);
 
@@ -199,13 +208,19 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
 
     @Override
     public void onDataRetrieved(String source, Bundle bundle) {
-        if (source==API_GET_DOCTOR_LIST) {
+        if (source.equals(API_GET_DOCTOR_LIST)) {
             FindDoctorFragment fragment = new FindDoctorFragment();
             fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().replace(frameLayout.getId(), fragment).addToBackStack(null).commit();
         }
-        else if (source==API_UPDATE_PROFILE){
+        else if (source.equals(API_UPDATE_PROFILE)){
             Log.e("TAG", "onDataRetrieved: "+bundle.getString("errorMsg"));
+        }
+
+        else if (source.equals(ALERT_POP_UP)){
+            Intent intent=new Intent(Intent.ACTION_DIAL);
+            intent.setData(Uri.parse("tel:"+bundle.getString("phone")));
+            startActivity(intent);
         }
 
     }

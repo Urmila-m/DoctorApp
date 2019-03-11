@@ -48,7 +48,7 @@ public class FindDoctorFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.find_doctor_fragment_layout, container, false);
         layoutManager=new LinearLayoutManager(context);
-        adapter=new DoctorAdapter(list, getContext());
+        adapter=new DoctorAdapter(list, context);
         return view;
     }
 

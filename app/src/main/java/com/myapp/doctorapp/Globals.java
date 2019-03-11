@@ -17,6 +17,8 @@ public class Globals extends Application {
     public static final String GET_USER_USING_ID="ApiBgTaskGetUserUsingId";
     public static final String API_GET_ID_LIST="ApiBgTaskGetIdList";
     public static final String SIGNUP="SignUpWithFacebookTask";
+    public static final String ALERT_POP_UP="AlertDialog";
+
 
     public static User bundleToUser(Bundle bundle){
         User user=new User();
