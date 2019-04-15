@@ -166,6 +166,10 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         if (id==R.id.find_doctor_block) {
             apiTask.getDoctorList(this);
         }
+
+        else if(id==R.id.home_appointment){
+            apiTask.getAppointmentDetails(preferences.getString("name", ""), this);
+        }
         else if (id==R.id.btn_edit_profile){
             Bundle previousValues=new Bundle();
             previousValues.putString("height", preferences.getString("height", ""));

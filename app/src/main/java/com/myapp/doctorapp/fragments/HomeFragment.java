@@ -21,6 +21,7 @@ public class HomeFragment extends Fragment {
 
     OnFragmentButtonClickListener listener;
     LinearLayout findDoctorBlock;
+    LinearLayout appoinmentBlock;
     Context context;
 
     public HomeFragment() {
@@ -47,6 +48,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         findDoctorBlock=view.findViewById(R.id.find_doctor_block);
+        appoinmentBlock=view.findViewById(R.id.home_appointment);
     }
 
     @Override
@@ -57,6 +59,13 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Log.e("TAG", "onClick: Home Fragment");
                 listener.onButtonClicked(findDoctorBlock.getId(), new FindDoctorFragment(), new Bundle());
+            }
+        });
+
+        appoinmentBlock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onButtonClicked(R.id.home_appointment, new MyAppointmentFragment(), new Bundle());
             }
         });
     }
