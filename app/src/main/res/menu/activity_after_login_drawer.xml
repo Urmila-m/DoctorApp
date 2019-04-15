@@ -16,9 +16,9 @@
             android:title="@string/profile" />
 
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_appointment"
             android:icon="@drawable/ic_menu_manage"
-            android:title="@string/services" />
+            android:title="@string/my_appointments" />
     </group>
 
     <item android:title="@string/account_settings">

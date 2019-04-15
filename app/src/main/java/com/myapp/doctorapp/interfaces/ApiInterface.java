@@ -2,6 +2,7 @@ package com.myapp.doctorapp.interfaces;
 
 import android.os.Bundle;
 
+import com.myapp.doctorapp.model.AppointmentDetail;
 import com.myapp.doctorapp.model.Doctor;
 import com.myapp.doctorapp.model.EmailPasswordResponse;
 import com.myapp.doctorapp.model.IdModel;
@@ -61,5 +62,19 @@ public interface ApiInterface {
     @FormUrlEncoded
     Call<User> getUserUsingId(@Field("action") String getRecordWithId,
                        @Field("id") String id);
+
+    @POST("doctorAppAPI.php")
+    @FormUrlEncoded
+    Call<PostResponse> setAppointment(@Field("action") String setAppointment,
+                                      @Field("doctorName") String doctor,
+                                      @Field("doctorFee") String doctorFee,
+                                      @Field("patient") String patient,
+                                      @Field("appointment_time") String time,
+                                      @Field("appointment_date") String date);
+
+    @POST("doctorAppAPI.php")
+    @FormUrlEncoded
+    Call<List<AppointmentDetail>>getAppointmentDetails(@Field("action") String getAppDetails,
+                                                       @Field("patientName") String patient);
 
 }

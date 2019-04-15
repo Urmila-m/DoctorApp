@@ -47,7 +47,7 @@ public class TimePickerFragment extends Fragment{
                 int minute=timePicker.getMinute();
 
                 Bundle bundle=new Bundle();
-                bundle.putString("appoinment_time", hour+":"+minute);
+                bundle.putString("appointment_time", hour+":"+minute);
                 if (listener!=null){
                     listener.onButtonClicked(btnNext.getId(), new HomeFragment(), bundle);
                 }

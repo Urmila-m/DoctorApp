@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.myapp.doctorapp.interfaces.ApiInterface;
 import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
+import com.myapp.doctorapp.model.AppointmentDetail;
 import com.myapp.doctorapp.model.Doctor;
 import com.myapp.doctorapp.model.EmailPasswordResponse;
 import com.myapp.doctorapp.model.IdModel;
@@ -25,7 +26,9 @@ import static com.myapp.doctorapp.Globals.API_GET_ID_LIST;
 import static com.myapp.doctorapp.Globals.API_GET_USER;
 import static com.myapp.doctorapp.Globals.API_INSERT;
 import static com.myapp.doctorapp.Globals.API_UPDATE_PROFILE;
+import static com.myapp.doctorapp.Globals.GET_APPOINT_DETAILS;
 import static com.myapp.doctorapp.Globals.GET_USER_USING_ID;
+import static com.myapp.doctorapp.Globals.SET_APPOINTMENT;
 import static com.myapp.doctorapp.Globals.anInt;
 
 public class ApiBackgroundTask {
@@ -188,6 +191,56 @@ public class ApiBackgroundTask {
                     Log.e("TAG", "onFailure: "+t.getMessage());
                 }
             });
+        }
+    }
+
+    public void setAppointment(Bundle bundle, final OnDataRetrievedListener listener){
+        if (listener!=null){
+            apiInterface.setAppointment("setAppointment",
+                    bundle.getString("doctorName"),
+                    bundle.getString("doctorFee"),
+                    bundle.getString("patient"),
+                    bundle.getString("appointment_time"),
+                    bundle.getString("appointment_date")
+                    ).enqueue(new Callback<PostResponse>() {
+                @Override
+                public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                    PostResponse postResponse=response.body();
+                    Bundle bundle=new Bundle();
+                    bundle.putSerializable("response", (Serializable) postResponse);
+                    Log.e("TAG", "onResponse: "+postResponse.getErrorMsg());
+                    listener.onDataRetrieved(SET_APPOINTMENT, bundle);
+                }
+
+                @Override
+                public void onFailure(Call<PostResponse> call, Throwable t) {
+                    Log.e("TAG", "onFailure: "+t.getMessage());
+                }
+            });
+        }
+    }
+
+    public void getAppointmentDetails(String patient, final OnDataRetrievedListener listener){
+        if (listener!=null) {
+            apiInterface.getAppointmentDetails("getAppDetails", patient)
+                    .enqueue(new Callback<List<AppointmentDetail>>() {
+                        @Override
+                        public void onResponse(Call<List<AppointmentDetail>> call, Response<List<AppointmentDetail>> response) {
+                            Bundle b=new Bundle();
+                            b.putSerializable("DetailList", (Serializable) response.body());
+                            List<AppointmentDetail> list=response.body();
+                            for (AppointmentDetail d:list
+                                 ) {
+                                Log.e("TAG", "onResponse: "+d.toString()+"\n");
+                            }
+                            listener.onDataRetrieved(GET_APPOINT_DETAILS, b);
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<AppointmentDetail>> call, Throwable t) {
+                            Log.e("TAG", "onFailure: "+ t.getMessage());
+                        }
+                    });
         }
     }
 }

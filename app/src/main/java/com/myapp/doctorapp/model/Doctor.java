@@ -9,7 +9,15 @@ public class Doctor implements Serializable {
     private String hospital;
     private String speciality;
     private String phone;
-    private int id, rating;
+    private int id, rating, fee;
+
+    public int getFee() {
+        return fee;
+    }
+
+    public void setFee(int fee) {
+        this.fee = fee;
+    }
 
     public String getPhone() {
         return phone;
@@ -67,13 +75,14 @@ public class Doctor implements Serializable {
         this.rating = rating;
     }
 
-    public Doctor(String name, String image, String hospital, String speciality, int id, int rating) {
+    public Doctor(String name, String image, String hospital, String speciality, int id, int rating, int fee) {
         this.name = name;
         this.image = image;
         this.hospital = hospital;
         this.speciality = speciality;
         this.id = id;
         this.rating = rating;
+        this.fee=fee;
     }
 
     @Override
@@ -86,6 +95,7 @@ public class Doctor implements Serializable {
                 ", id=" + id +
                 ", rating=" + rating +
                 ", phone number=" + phone +
+                ", fee=" + fee +
                 '}';
     }
 

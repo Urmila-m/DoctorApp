@@ -24,16 +24,23 @@ import com.myapp.doctorapp.R;
 import com.myapp.doctorapp.backgroundtasks.ApiBackgroundTask;
 import com.myapp.doctorapp.fragments.FindDoctorFragment;
 import com.myapp.doctorapp.fragments.HomeFragment;
+import com.myapp.doctorapp.fragments.MyAppointmentFragment;
 import com.myapp.doctorapp.fragments.ProfileFragment;
 import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
+import com.myapp.doctorapp.model.AppointmentDetail;
+import com.myapp.doctorapp.model.PostResponse;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.myapp.doctorapp.Globals.ALERT_POP_UP;
 import static com.myapp.doctorapp.Globals.API_GET_DOCTOR_LIST;
 import static com.myapp.doctorapp.Globals.API_UPDATE_PROFILE;
+import static com.myapp.doctorapp.Globals.GET_APPOINT_DETAILS;
+import static com.myapp.doctorapp.Globals.SET_APPOINTMENT;
 
 public class AfterLoginActivity extends PreferenceInitializingActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnFragmentButtonClickListener, OnDataRetrievedListener {
@@ -66,6 +73,7 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         apiTask=new ApiBackgroundTask();
 
         timeAndDate=new Bundle();
+        timeAndDate.putString("patient", preferences.getString("name", ""));
 
         View view=findViewById(R.id.dl_content);
         View view1=view.findViewById(R.id.include_after_login);
@@ -135,11 +143,12 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         } else if (id == R.id.nav_home) {
            getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), new HomeFragment()).commit();
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_appointment) {
+           Log.e("TAG", "onNavigationItemSelected: "+preferences.getString("name", ""));
+           apiTask.getAppointmentDetails(preferences.getString("name", ""), this);
 
         } else if (id == R.id.nav_log_out) {
            editor.clear().commit();
-//           editor.remove("email");
            LoginManager.getInstance().logOut();//fb sign in vaye
            Intent intent=new Intent(AfterLoginActivity.this, SignInActivity.class);
            startActivity(intent);
@@ -194,13 +203,14 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         }
 
         else if (id==R.id.btn_choose_time){
-//            Toast.makeText(this, "Time Picker", Toast.LENGTH_SHORT).show();
             getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).commit();
             for (String s:bundle.keySet()
             ) {
                 timeAndDate.putString(s, bundle.getString(s));
             }
-            //TODO send this bundle to database
+
+            apiTask.setAppointment(timeAndDate, this);
+
         }
 
         else if (id==R.id.btn_book_appointment_doctor_info){
@@ -252,6 +262,26 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
             Intent intent=new Intent(Intent.ACTION_DIAL);
             intent.setData(Uri.parse("tel:"+bundle.getString("phone")));
             startActivity(intent);
+        }
+
+        else if (source.equals(SET_APPOINTMENT)){
+            PostResponse response= (PostResponse) bundle.getSerializable("response");
+            Log.e("TAG", "onDataRetrieved: "+response.getErrorMsg() );
+            if (response.isSuccess()){
+                Log.e("TAG", "onDataRetrieved: appointment set");
+                Toast.makeText(this, "appointment set", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Log.e("TAG", "onDataRetrieved: "+ response.getErrorMsg());
+                Toast.makeText(this, response.getErrorMsg(), Toast.LENGTH_LONG).show();
+            }
+        }
+
+        else if (source.equals(GET_APPOINT_DETAILS)){
+            MyAppointmentFragment fragment=new MyAppointmentFragment();
+            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).commit();
+
         }
 
     }

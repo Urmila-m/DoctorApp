@@ -2,6 +2,7 @@ package com.myapp.doctorapp.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,8 @@ import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
 import com.myapp.doctorapp.model.Doctor;
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -68,6 +71,7 @@ public class DoctorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 TextView tvRating=doctorDetails.findViewById(R.id.tv_rating_doctor_info);
                 TextView tvSpeciality=doctorDetails.findViewById(R.id.tv_speciality_doctor_info);
                 TextView tvHospital=doctorDetails.findViewById(R.id.tv_hospital_doctor_info);
+                TextView tvFee=doctorDetails.findViewById(R.id.tv_doctor_fee);
                 CircleImageView image=doctorDetails.findViewById(R.id.profile_image_doctor_info);
                 final LinearLayout call=doctorDetails.findViewById(R.id.call_doctor_info);
                 Button bookAppointment=doctorDetails.findViewById(R.id.btn_book_appointment_doctor_info);
@@ -76,6 +80,7 @@ public class DoctorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 tvRating.setText(Integer.toString(doctor.getRating()));
                 tvHospital.setText(doctor.getHospital());
                 tvSpeciality.setText(doctor.getSpeciality());
+                tvFee.setText("Rs. "+doctor.getFee());
 
                 Picasso.get().load(doctor.getImage()).placeholder(R.drawable.default_image).into(image);
 
@@ -97,7 +102,7 @@ public class DoctorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 int width=displayMetrics.widthPixels;//getting full window width
                 int height=displayMetrics.heightPixels;//getting full window height
                 width*=0.9;//will be used to set the width of alert dialog
-                height*=0.7;
+                height*=0.8;
 
                 AlertDialog.Builder builder=new AlertDialog.Builder(context)
                         .setView(doctorDetails);
@@ -112,6 +117,7 @@ public class DoctorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     public void onClick(View v) {
                         Bundle bundle=new Bundle();
                         bundle.putString("doctorName", doctor.getName());
+                        bundle.putString("doctorFee", Integer.toString(doctor.getFee()));
                         Toast.makeText(context, "book button clicked", Toast.LENGTH_SHORT).show();
                         listener.onButtonClicked(R.id.btn_book_appointment_doctor_info, new DatePickerFragment(), bundle);
                         alertDialog.dismiss();

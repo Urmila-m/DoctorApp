@@ -47,7 +47,7 @@ public class DatePickerFragment extends Fragment {
                 int day=datePicker.getDayOfMonth();
 
                 Bundle bundle=new Bundle();
-                bundle.putString("appoinment_date", Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year));
+                bundle.putString("appointment_date", Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year));
                 if (listener!=null){
                     listener.onButtonClicked(btnNext.getId(), new TimePickerFragment(), bundle);
                 }

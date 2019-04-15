@@ -67,6 +67,7 @@ else if ($action=="getRecordWithEmail"){
         $required['Weight'] = $rows[7];
         $required['Password'] = $rows[8];
         $required['Image'] = $rows[9];
+		$required['BloodGroup']=$rows[10];
         echo json_encode($required);
     }
 
@@ -84,6 +85,7 @@ else if($action=="getDoctorList"){
             $required["rating"]=$rows[3];
             $required["image"]=$rows[4];
             $required["speciality"]=$rows[5];
+            $required["phone"]=$rows[6];
 
             array_push($reqList, $required);
         }
@@ -110,6 +112,46 @@ else if($action=="editProfile") {
         $response['success']=false;
         $response['errorMsg']=mysqli_error($connectToDatabase);
         echo json_encode($response);
+    }
+}
+
+else if($action=="getIdList"){
+    $query="SELECT id FROM registration";
+    $getId=mysqli_query($connectToDatabase, $query);
+    if ($getId) {
+        $dataArray = array();
+        while ($rows = mysqli_fetch_array($getId)) {
+            $reqList['id'] = $rows[0];
+            array_push($dataArray, $reqList);
+        }
+        echo json_encode($dataArray);
+    }
+    else{
+        echo mysqli_error($connectToDatabase);
+    }
+}
+
+else if ($action=="getRecordWithId"){
+    $id=$_POST["id"];
+    $query="SELECT * FROM registration WHERE id='".$id."'";
+    $getRecord=mysqli_query($connectToDatabase, $query);
+    if ($getRecord==false){
+        echo mysqli_error($connectToDatabase);
+    }
+    else {
+        $rows = mysqli_fetch_array($getRecord);
+        $required['id'] = $rows[0];
+        $required['Name'] = $rows[1];
+        $required['DOB'] = $rows[2];
+        $required['Gender'] = $rows[3];
+        $required['Email'] = $rows[4];
+        $required['MobileNumber'] = $rows[5];
+        $required['Height'] = $rows[6];
+        $required['Weight'] = $rows[7];
+        $required['Password'] = $rows[8];
+        $required['Image'] = $rows[9];
+		$required['BloodGroup']=$rows[10];
+        echo json_encode($required);
     }
 }
 
