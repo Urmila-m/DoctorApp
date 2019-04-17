@@ -3,10 +3,20 @@ package com.myapp.doctorapp.model;
 public class AppointmentDetail {
     String doctor;
     String appointment_date;
+    String appointment_time;
 
-    public AppointmentDetail(String doctor, String appointment_date) {
+    public String getAppointment_time() {
+        return appointment_time;
+    }
+
+    public void setAppointment_time(String appointment_time) {
+        this.appointment_time = appointment_time;
+    }
+
+    public AppointmentDetail(String doctor, String appointment_date, String appointment_time) {
         this.doctor = doctor;
         this.appointment_date = appointment_date;
+        this.appointment_time=appointment_time;
     }
 
     public String getDoctor() {
@@ -30,6 +40,7 @@ public class AppointmentDetail {
         return "AppointmentDetail{" +
                 "doctor='" + doctor + '\'' +
                 ", appointment_date='" + appointment_date + '\'' +
+                ", appointment_time='"+appointment_time+'\''+
                 '}';
     }
 }

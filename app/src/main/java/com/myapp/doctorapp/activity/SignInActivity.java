@@ -18,6 +18,7 @@ import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.model.EmailPasswordResponse;
 import com.myapp.doctorapp.model.IdModel;
 import com.myapp.doctorapp.model.User;
+import com.myapp.doctorapp.services.NotificationService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,6 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_in_layout);
 
-
         AccessToken accessToken=AccessToken.getCurrentAccessToken();
         boolean isLogin=accessToken!=null&&!accessToken.isExpired();
 
@@ -56,7 +56,6 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
             finish();
         }
 
-        Log.e("TAG", "onCreate: "+preferences.getString("email", ""));
         String preferenceEmpty=preferences.getString("email", "");
         if (!preferenceEmpty.equals("")){
             startActivity(new Intent(this, AfterLoginActivity.class));

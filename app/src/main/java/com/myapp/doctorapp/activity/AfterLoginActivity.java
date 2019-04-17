@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.facebook.login.LoginManager;
 import com.myapp.doctorapp.R;
 import com.myapp.doctorapp.backgroundtasks.ApiBackgroundTask;
+import com.myapp.doctorapp.backgroundtasks.NotificationAlarmThread;
 import com.myapp.doctorapp.fragments.FindDoctorFragment;
 import com.myapp.doctorapp.fragments.HomeFragment;
 import com.myapp.doctorapp.fragments.MyAppointmentFragment;
@@ -30,8 +32,14 @@ import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
 import com.myapp.doctorapp.model.AppointmentDetail;
 import com.myapp.doctorapp.model.PostResponse;
+import com.myapp.doctorapp.services.NotificationService;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -51,12 +59,15 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
     FrameLayout frameLayout;
     ApiBackgroundTask apiTask;
     NavigationView navigationView;
-    Bundle timeAndDate;
+    Bundle timeAndDate, appointmentDetail;
+    NotificationAlarmThread alarmThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_login);
+
+        Log.e("TAG", "onCreate: testing the code after thread" );
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -71,6 +82,23 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         });
 
         apiTask=new ApiBackgroundTask();
+
+        apiTask.getAppointmentDetails(preferences.getString("name", ""), new OnDataRetrievedListener() {
+            @Override
+            public void onDataRetrieved(String source, Bundle bundle) {
+                List<AppointmentDetail> list= (List<AppointmentDetail>) bundle.getSerializable("DetailList");
+                list=filterFutureDate(list);
+
+                for (AppointmentDetail d:list
+                     ) {
+                    if (isDateToday(d)){//TODO if multiple appointments for today, how many threads will start?
+                        Log.e("TAG", "onDataRetrieved: "+d.getAppointment_date()+" "+d.getAppointment_time());
+                        alarmThread=new NotificationAlarmThread(AfterLoginActivity.this, stringToCalendar(d.getAppointment_date(), d.getAppointment_time()), d.getDoctor());
+                        alarmThread.start();
+                    }
+                }
+            }
+        });
 
         timeAndDate=new Bundle();
         timeAndDate.putString("patient", preferences.getString("name", ""));
@@ -151,6 +179,7 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
            editor.clear().commit();
            LoginManager.getInstance().logOut();//fb sign in vaye
            Intent intent=new Intent(AfterLoginActivity.this, SignInActivity.class);
+           alarmThread.setThreadRun(false);//stops the thread that sends notifications about appointments to users
            startActivity(intent);
            finish();
 
@@ -239,18 +268,6 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
 
     }
 
-    Bundle preferenceToBundle(){//only the values needed to be passed to ProfileFragment
-        Bundle bundle=new Bundle();
-        bundle.putString("name",preferences.getString("name", ""));
-        bundle.putString("image",preferences.getString("image", ""));
-        bundle.putString("weight",preferences.getString("weight", ""));
-        bundle.putString("height",preferences.getString("height", ""));
-        bundle.putString("gender",preferences.getString("gender", ""));
-        bundle.putString("birthday",preferences.getString("dob", ""));
-        bundle.putString("blood", preferences.getString("blood", ""));
-        return bundle;
-    }
-
     @Override
     public void onDataRetrieved(String source, Bundle bundle) {
         if (source.equals(API_GET_DOCTOR_LIST)) {
@@ -282,11 +299,60 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         }
 
         else if (source.equals(GET_APPOINT_DETAILS)){
+
             MyAppointmentFragment fragment=new MyAppointmentFragment();
             fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).commit();
 
         }
+    }
 
+    Bundle preferenceToBundle(){//only the values needed to be passed to ProfileFragment
+        Bundle bundle=new Bundle();
+        bundle.putString("name",preferences.getString("name", ""));
+        bundle.putString("image",preferences.getString("image", ""));
+        bundle.putString("weight",preferences.getString("weight", ""));
+        bundle.putString("height",preferences.getString("height", ""));
+        bundle.putString("gender",preferences.getString("gender", ""));
+        bundle.putString("birthday",preferences.getString("dob", ""));
+        bundle.putString("blood", preferences.getString("blood", ""));
+        return bundle;
+    }
+
+    private List<AppointmentDetail> filterFutureDate(List<AppointmentDetail> date){
+        List<AppointmentDetail> futureApp=new ArrayList<>();
+        Calendar current=Calendar.getInstance();
+        for (AppointmentDetail d:date
+             ) {
+            Calendar c=stringToCalendar(d.getAppointment_date(), d.getAppointment_time());
+            if (c.getTimeInMillis()>=current.getTimeInMillis()){
+                futureApp.add(d);
+            }
+        }
+        return futureApp;
+    }
+
+    private Calendar stringToCalendar(String date, String time){
+        Date appDate=null;
+        SimpleDateFormat dateFormat=new SimpleDateFormat("MM/dd/yyyy hh:mm");
+        try {
+            appDate=dateFormat.parse(date+" "+time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar c=Calendar.getInstance();
+        c.setTime(appDate);
+        return c;
+    }
+
+    private boolean isDateToday(AppointmentDetail d){
+        Calendar c=Calendar.getInstance();
+        SimpleDateFormat dateFormat=new SimpleDateFormat("MM/dd/yyyy");
+        String currentDate=dateFormat.format(c.getTime());
+        if (d.getAppointment_date().equals(currentDate)){
+            return true;
+        }
+        else
+            return false;
     }
 }

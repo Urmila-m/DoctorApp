@@ -120,6 +120,7 @@ public class DoctorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         bundle.putString("doctorFee", Integer.toString(doctor.getFee()));
                         Toast.makeText(context, "book button clicked", Toast.LENGTH_SHORT).show();
                         listener.onButtonClicked(R.id.btn_book_appointment_doctor_info, new DatePickerFragment(), bundle);
+                        //TODO service start garne for reminder
                         alertDialog.dismiss();
                     }
                 });

@@ -24,7 +24,8 @@
         <activity
             android:name=".activity.AfterLoginActivity"
             android:label="@string/title_activity_after_login"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|keyboardHidden">
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.DIAL"/>-->
                 <!--<data android:host="tel"-->
@@ -33,6 +34,11 @@
             <!--</intent-filter>-->
         </activity>
         <activity android:name=".activity.MainActivity" />
+
+        <service android:name=".services.NotificationService"
+            android:exported="false"
+            android:enabled="true"
+            />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

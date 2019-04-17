@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 
+import com.google.zxing.common.StringUtils;
 import com.myapp.doctorapp.R;
 import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
@@ -47,7 +49,8 @@ public class DatePickerFragment extends Fragment {
                 int day=datePicker.getDayOfMonth();
 
                 Bundle bundle=new Bundle();
-                bundle.putString("appointment_date", Integer.toString(month)+"/"+Integer.toString(day)+"/"+Integer.toString(year));
+                bundle.putString("appointment_date", String.format("%02d", month)+"/"+String.format("%02d", day)+"/"+String.format("%04d", year));
+                Log.e("TAG", "onClick: "+ bundle.getString("appointment_date"));
                 if (listener!=null){
                     listener.onButtonClicked(btnNext.getId(), new TimePickerFragment(), bundle);
                 }

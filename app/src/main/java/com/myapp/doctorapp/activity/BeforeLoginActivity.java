@@ -11,6 +11,7 @@ import com.myapp.doctorapp.fragments.ManualSignUpFragment;
 import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
 import com.myapp.doctorapp.model.User;
+import com.myapp.doctorapp.services.NotificationService;
 
 import java.util.Set;
 
