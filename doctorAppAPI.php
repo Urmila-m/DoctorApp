@@ -86,6 +86,7 @@ else if($action=="getDoctorList"){
             $required["image"]=$rows[4];
             $required["speciality"]=$rows[5];
             $required["phone"]=$rows[6];
+            $required["fee"]=$rows[7];
 
             array_push($reqList, $required);
         }
@@ -152,6 +153,43 @@ else if ($action=="getRecordWithId"){
         $required['Image'] = $rows[9];
 		$required['BloodGroup']=$rows[10];
         echo json_encode($required);
+    }
+}
+
+else if ($action=="setAppointment"){
+    $doctor=$_POST["doctorName"];
+    $doctorFee=$_POST["doctorFee"];
+    $appDate=$_POST["appointment_date"];
+    $appTime=$_POST["appointment_time"];
+    $patient=$_POST["patient"];
+    $query="INSERT INTO appointment (Doctor, Patient, Date, Time, Fee) VALUES ('".$doctor."', '".$patient."', '".$appDate."', '".$appTime."', '".$doctorFee."')";
+    $setApp=mysqli_query($connectToDatabase, $query);
+    if ($setApp){
+        $response['success']=true;
+        $response['errorMsg']="No error";
+        echo json_encode($response);
+    }
+
+    else{
+        $response['success']=false;
+        $response['errorMsg']=mysqli_error($connectToDatabase);
+        echo json_encode($response);
+    }
+}
+
+else if ($action=="getAppDetails"){
+    $patient=$_POST["patientName"];
+    $query="SELECT Doctor, Date, Time FROM appointment WHERE Patient='".$patient."'";
+    $DoctorAndDate=mysqli_query($connectToDatabase, $query);
+    if ($DoctorAndDate){
+        $dataArray=array();
+        while ($rows=mysqli_fetch_array($DoctorAndDate)){
+            $required["doctor"]=$rows[0];
+            $required["appointment_date"]=$rows[1];
+            $required["appointment_time"]=$rows[2];
+            array_push($dataArray, $required);
+        }
+        echo json_encode($dataArray);
     }
 }
 

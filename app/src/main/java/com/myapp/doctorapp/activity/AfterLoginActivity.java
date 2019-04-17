@@ -1,5 +1,8 @@
 package com.myapp.doctorapp.activity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -53,14 +56,16 @@ import static com.myapp.doctorapp.Globals.SET_APPOINTMENT;
 public class AfterLoginActivity extends PreferenceInitializingActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnFragmentButtonClickListener, OnDataRetrievedListener {
 
-    CircleImageView imageView, imageProfile;
+    CircleImageView imageView;
     TextView tvName;
     TextView tvEmail;
     FrameLayout frameLayout;
     ApiBackgroundTask apiTask;
     NavigationView navigationView;
-    Bundle timeAndDate, appointmentDetail;
-    NotificationAlarmThread alarmThread;
+    Bundle timeAndDate;
+    AlarmManager alarmManager;
+    List<PendingIntent> listOfPI;
+//    PendingIntent pi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,17 +91,11 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         apiTask.getAppointmentDetails(preferences.getString("name", ""), new OnDataRetrievedListener() {
             @Override
             public void onDataRetrieved(String source, Bundle bundle) {
-                List<AppointmentDetail> list= (List<AppointmentDetail>) bundle.getSerializable("DetailList");
-                list=filterFutureDate(list);
-
-                for (AppointmentDetail d:list
-                     ) {
-                    if (isDateToday(d)){//TODO if multiple appointments for today, how many threads will start?
-                        Log.e("TAG", "onDataRetrieved: "+d.getAppointment_date()+" "+d.getAppointment_time());
-                        alarmThread=new NotificationAlarmThread(AfterLoginActivity.this, stringToCalendar(d.getAppointment_date(), d.getAppointment_time()), d.getDoctor());
-                        alarmThread.start();
-                    }
-                }
+                List<AppointmentDetail> list = (List<AppointmentDetail>) bundle.getSerializable("DetailList");
+                list = filterFutureDate(list);
+                listOfPI=new ArrayList<>();
+                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                AfterLoginActivity.this.addPIofToday(list, listOfPI);
             }
         });
 
@@ -179,7 +178,11 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
            editor.clear().commit();
            LoginManager.getInstance().logOut();//fb sign in vaye
            Intent intent=new Intent(AfterLoginActivity.this, SignInActivity.class);
-           alarmThread.setThreadRun(false);//stops the thread that sends notifications about appointments to users
+
+           for (PendingIntent pi:listOfPI
+                ) {
+               alarmManager.cancel(pi);
+           }
            startActivity(intent);
            finish();
 
@@ -290,6 +293,7 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
             Log.e("TAG", "onDataRetrieved: "+response.getErrorMsg() );
             if (response.isSuccess()){
                 Log.e("TAG", "onDataRetrieved: appointment set");
+                //TODO if today ho vaye pending intent ma add garne
                 Toast.makeText(this, "appointment set", Toast.LENGTH_SHORT).show();
             }
             else {
@@ -355,4 +359,32 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         else
             return false;
     }
+
+    public void addPIofToday(List<AppointmentDetail> list, List<PendingIntent> listOfPI){
+        List<Calendar> appointDateList = new ArrayList<>();
+        for (AppointmentDetail d:list
+        ) {
+            if (isDateToday(d)){
+                Log.e("TAG", "onDataRetrieved: "+d.getAppointment_date()+" "+d.getAppointment_time());
+                Calendar appointDate=stringToCalendar(d.getAppointment_date(), d.getAppointment_time());
+                Intent intent = new Intent(AfterLoginActivity.this, NotificationService.class);
+                intent.putExtra("title", "Appointment");
+                intent.putExtra("message", "You have an appoinment with "+d.getDoctor()+" today at "+appointDate.get(Calendar.HOUR_OF_DAY)+":"+appointDate.get(Calendar.MINUTE));
+                PendingIntent pi=PendingIntent.getService(AfterLoginActivity.this, (int) (Math.random()*1000), intent, 0);
+                listOfPI.add(pi);
+                appointDateList.add(appointDate);
+            }
+        }
+
+       for (int i=0; i<appointDateList.size();i++){
+           alarmManager.setExact(AlarmManager.RTC_WAKEUP, appointDateList.get(i).getTimeInMillis(), listOfPI.get(i));
+       }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e("TAG", "onStop: ");
+    }
+
 }
