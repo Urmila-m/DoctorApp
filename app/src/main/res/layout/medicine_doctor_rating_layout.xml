@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        style="@style/base_layout_style">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/medicine_prescription"
+                android:gravity="center"
+                android:textSize="@dimen/normal_text_size"
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/tv_medicine_doctor_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/normal_text_size"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:text="@string/jitu"
+                />
+
+        <TextView
+            android:layout_marginTop="@dimen/all_padding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name of medicine"
+            android:textSize="@dimen/normal_text_size"
+            android:textColor="@color/colorAccent"/>
+
+        <EditText
+            android:id="@+id/et_medicine_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter name of medicine"
+            android:layout_marginTop="@dimen/five_dp"
+            android:padding="@dimen/five_dp"
+            style="@style/edit_text_style"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/normal_text_size"
+            android:paddingTop="@dimen/all_padding"
+            android:text="Enter the time for taking medicine"/>
+
+        <CheckBox
+            android:id="@+id/rb_morning"
+            android:checked="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Morning"/>
+
+        <CheckBox
+            android:id="@+id/rb_day"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Day"/>
+
+        <CheckBox
+            android:id="@+id/rb_night"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Evening/Night"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/normal_text_size"
+            android:layout_marginTop="@dimen/all_padding"
+            android:text="Medicine"/>
+
+        <RadioGroup
+            android:id="@+id/rg_medicine_food"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/rb_before_food"
+                android:checked="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Before food"/>
+
+            <RadioButton
+                android:id="@+id/rb_after_food"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="After food"/>
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/normal_text_size"
+            android:paddingTop="@dimen/all_padding"
+            android:text="Give rating to doctor out of 5"
+            />
+
+       <RatingBar
+           android:id="@+id/rating_bar_doctor"
+           android:layout_width="wrap_content"
+           android:layout_height="30dp"
+           android:numStars="5"
+           android:stepSize="1"
+           style="?android:attr/ratingBarStyleIndicator"
+           android:isIndicator="false"
+           />
+
+        <Button
+            android:id="@+id/btn_medicine_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/button_style"
+            android:text="@string/submit"/>
+
+    </LinearLayout>
+</ScrollView>

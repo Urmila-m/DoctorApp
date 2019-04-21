@@ -112,5 +112,7 @@
     <string name="choose_appointment_time">Choose appoinment time</string>
     <string name="fee">General one time check up fee:</string>
     <string name="my_appointments">My Appointments</string>
+    <string name="medicine_prescription">Medicines prescribed by</string>
+    <string name="submit">Submit</string>
 
 </resources>

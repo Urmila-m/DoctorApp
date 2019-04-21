@@ -35,6 +35,9 @@
         </activity>
         <activity android:name=".activity.MainActivity" />
 
+        <activity android:name=".activity.MedicineActivity">
+        </activity>
+
         <service android:name=".services.NotificationService"
             android:exported="false"
             android:enabled="true"

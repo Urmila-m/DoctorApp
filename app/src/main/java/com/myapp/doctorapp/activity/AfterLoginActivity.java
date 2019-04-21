@@ -8,7 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -34,6 +36,7 @@ import com.myapp.doctorapp.fragments.ProfileFragment;
 import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
 import com.myapp.doctorapp.model.AppointmentDetail;
+import com.myapp.doctorapp.model.MedicineDetails;
 import com.myapp.doctorapp.model.PostResponse;
 import com.myapp.doctorapp.services.NotificationService;
 import com.squareup.picasso.Picasso;
@@ -51,6 +54,7 @@ import static com.myapp.doctorapp.Globals.ALERT_POP_UP;
 import static com.myapp.doctorapp.Globals.API_GET_DOCTOR_LIST;
 import static com.myapp.doctorapp.Globals.API_UPDATE_PROFILE;
 import static com.myapp.doctorapp.Globals.GET_APPOINT_DETAILS;
+import static com.myapp.doctorapp.Globals.INSERT_MEDICINE;
 import static com.myapp.doctorapp.Globals.SET_APPOINTMENT;
 
 public class AfterLoginActivity extends PreferenceInitializingActivity
@@ -64,8 +68,7 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
     NavigationView navigationView;
     Bundle timeAndDate;
     AlarmManager alarmManager;
-    List<PendingIntent> listOfPI;
-//    PendingIntent pi;
+    List<PendingIntent> listOfPI, medicineListOfPI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,10 +97,28 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
                 List<AppointmentDetail> list = (List<AppointmentDetail>) bundle.getSerializable("DetailList");
                 list = filterFutureDate(list);
                 listOfPI=new ArrayList<>();
+                medicineListOfPI=new ArrayList<>();
                 alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                AfterLoginActivity.this.addPIofToday(list, listOfPI);
+                AfterLoginActivity.this.addPIofToday(list, listOfPI, "appoint");
+                AfterLoginActivity.this.addPIofToday(list, medicineListOfPI, "medicine");
             }
         });
+//        Intent intent1=new Intent(this, NotificationService.class);
+//        intent1.putExtra("title", "Post Appointment Medicine Details");
+//        intent1.putExtra("message", "The appointment you had with "+"Samriddhi Shakya"+"3 hrs ago needs to be reviewed");
+//        intent1.putExtra("doctor", "Doctor");
+//        startService(intent1);
+
+        Intent intent=getIntent();
+        if (intent!=null){
+            MedicineDetails details=new MedicineDetails(preferences.getString("name", ""), intent.getStringExtra("doctor"),
+                    intent.getStringExtra("time"), intent.getStringExtra("medicine"), intent.getBooleanExtra("day", false),
+                    intent.getBooleanExtra("morning", false), intent.getBooleanExtra("night", false),
+                    intent.getFloatExtra("rating", 0));
+
+            Log.e("TAG", "onCreate: after login doctor"+intent.getStringExtra("doctor"));
+            apiTask.insertMedicineDetails(details, this);
+        }
 
         timeAndDate=new Bundle();
         timeAndDate.putString("patient", preferences.getString("name", ""));
@@ -180,6 +201,10 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
            Intent intent=new Intent(AfterLoginActivity.this, SignInActivity.class);
 
            for (PendingIntent pi:listOfPI
+                ) {
+               alarmManager.cancel(pi);
+           }
+           for (PendingIntent pi:medicineListOfPI
                 ) {
                alarmManager.cancel(pi);
            }
@@ -306,8 +331,13 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
 
             MyAppointmentFragment fragment=new MyAppointmentFragment();
             fragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).commit();
+            getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).addToBackStack(null).commit();
 
+        }
+
+        else if (source.equals(INSERT_MEDICINE)){
+            PostResponse response= (PostResponse) bundle.getSerializable("response");
+            Log.e("TAG", "onDataRetrieved: "+response.getErrorMsg());
         }
     }
 
@@ -360,7 +390,7 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
             return false;
     }
 
-    public void addPIofToday(List<AppointmentDetail> list, List<PendingIntent> listOfPI){
+    public void addPIofToday(List<AppointmentDetail> list, List<PendingIntent> listOfPI, String decisionParam){
         List<Calendar> appointDateList = new ArrayList<>();
         for (AppointmentDetail d:list
         ) {
@@ -368,17 +398,35 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
                 Log.e("TAG", "onDataRetrieved: "+d.getAppointment_date()+" "+d.getAppointment_time());
                 Calendar appointDate=stringToCalendar(d.getAppointment_date(), d.getAppointment_time());
                 Intent intent = new Intent(AfterLoginActivity.this, NotificationService.class);
-                intent.putExtra("title", "Appointment");
-                intent.putExtra("message", "You have an appoinment with "+d.getDoctor()+" today at "+appointDate.get(Calendar.HOUR_OF_DAY)+":"+appointDate.get(Calendar.MINUTE));
+
+                if (decisionParam.equals("appoint")) {
+                    intent.putExtra("title", "Appointment");
+                    intent.putExtra("message", "You have an appoinment with " + d.getDoctor() + " today at " + appointDate.get(Calendar.HOUR_OF_DAY) + ":" + appointDate.get(Calendar.MINUTE));
+                }
+                else if (decisionParam.equals("medicine")){
+                    intent.putExtra("title", "Post Appointment Medicine Details");
+                    intent.putExtra("message", "The appointment you had with "+d.getDoctor()+" 3 hrs ago needs to be reviewed");
+                    intent.putExtra("doctor", d.getDoctor());
+                }
+
                 PendingIntent pi=PendingIntent.getService(AfterLoginActivity.this, (int) (Math.random()*1000), intent, 0);
                 listOfPI.add(pi);
                 appointDateList.add(appointDate);
             }
         }
 
-       for (int i=0; i<appointDateList.size();i++){
-           alarmManager.setExact(AlarmManager.RTC_WAKEUP, appointDateList.get(i).getTimeInMillis(), listOfPI.get(i));
-       }
+        if (decisionParam.equals("appoint")) {
+            for (int i = 0; i < appointDateList.size(); i++) {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, appointDateList.get(i).getTimeInMillis(), listOfPI.get(i));
+
+            }
+        }
+        else if (decisionParam.equals("medicine")){
+            for (int i = 0; i < appointDateList.size(); i++) {
+//                alarmManager.setExact(AlarmManager.RTC_WAKEUP, appointDateList.get(i).getTimeInMillis()+10800000, listOfPI.get(i));
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, appointDateList.get(i).getTimeInMillis()+180000, listOfPI.get(i));
+            }
+        }
     }
 
     @Override

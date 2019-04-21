@@ -61,7 +61,7 @@ public interface ApiInterface {
     @POST("doctorAppAPI.php")
     @FormUrlEncoded
     Call<User> getUserUsingId(@Field("action") String getRecordWithId,
-                       @Field("id") String id);
+                              @Field("id") String id);
 
     @POST("doctorAppAPI.php")
     @FormUrlEncoded
@@ -74,7 +74,20 @@ public interface ApiInterface {
 
     @POST("doctorAppAPI.php")
     @FormUrlEncoded
-    Call<List<AppointmentDetail>>getAppointmentDetails(@Field("action") String getAppDetails,
-                                                       @Field("patientName") String patient);
+    Call<List<AppointmentDetail>> getAppointmentDetails(@Field("action") String getAppDetails,
+                                                        @Field("patientName") String patient);
+
+    @POST("doctorAppAPI.php")
+    @FormUrlEncoded
+    Call<PostResponse> insertMedicineDetails(@Field("action") String insertMedicineDetails,
+                                             @Field("medicine") String medicine,
+                                             @Field("doctor") String doctor,
+                                             @Field("patient") String patient,
+                                             @Field("time") String time,
+                                             @Field("morning") boolean morning,
+                                             @Field("day") boolean day,
+                                             @Field("night") boolean night,
+                                             @Field("rating") float rating);
 
 }
+

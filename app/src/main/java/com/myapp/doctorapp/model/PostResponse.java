@@ -1,6 +1,8 @@
 package com.myapp.doctorapp.model;
 
-public class PostResponse {
+import java.io.Serializable;
+
+public class PostResponse  implements Serializable {
     private String errorMsg;
     private boolean success;
 

@@ -9,6 +9,7 @@ import com.myapp.doctorapp.model.AppointmentDetail;
 import com.myapp.doctorapp.model.Doctor;
 import com.myapp.doctorapp.model.EmailPasswordResponse;
 import com.myapp.doctorapp.model.IdModel;
+import com.myapp.doctorapp.model.MedicineDetails;
 import com.myapp.doctorapp.model.PostResponse;
 import com.myapp.doctorapp.model.User;
 
@@ -28,6 +29,7 @@ import static com.myapp.doctorapp.Globals.API_INSERT;
 import static com.myapp.doctorapp.Globals.API_UPDATE_PROFILE;
 import static com.myapp.doctorapp.Globals.GET_APPOINT_DETAILS;
 import static com.myapp.doctorapp.Globals.GET_USER_USING_ID;
+import static com.myapp.doctorapp.Globals.INSERT_MEDICINE;
 import static com.myapp.doctorapp.Globals.SET_APPOINTMENT;
 import static com.myapp.doctorapp.Globals.anInt;
 
@@ -35,7 +37,6 @@ public class ApiBackgroundTask {
     private ApiInterface apiInterface;
 
     public ApiBackgroundTask(){
-        anInt=1;
         apiInterface= ApiClient.getRetrofitObj().create(ApiInterface.class);
     }
 
@@ -84,9 +85,9 @@ public class ApiBackgroundTask {
                 @Override
                 public void onResponse(Call<List<EmailPasswordResponse>> call, Response<List<EmailPasswordResponse>> response) {
                     List<EmailPasswordResponse> list=response.body();
-                    Bundle bundle=new Bundle();
-                    bundle.putSerializable("email_password_list", (Serializable) list);
-                    listener.onDataRetrieved(API_GET_EMAIL, bundle);
+                    Bundle b=new Bundle();
+                    b.putSerializable("email_password_list", (Serializable) list);
+                    listener.onDataRetrieved(API_GET_EMAIL, b);
                 }
 
                 @Override
@@ -103,10 +104,10 @@ public class ApiBackgroundTask {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     User user=response.body();
-                    Bundle bundle=new Bundle();
-                    bundle.putSerializable("User",user);
+                    Bundle b=new Bundle();
+                    b.putSerializable("User",user);
                     Log.e("TAG", "onResponse: "+user.getDOB());
-                    listener.onDataRetrieved(API_GET_USER, bundle);
+                    listener.onDataRetrieved(API_GET_USER, b);
                 }
 
                 @Override
@@ -123,9 +124,9 @@ public class ApiBackgroundTask {
                 @Override
                 public void onResponse(Call<List<Doctor>> call, Response<List<Doctor>> response) {
                     List<Doctor> list=response.body();
-                    Bundle bundle=new Bundle();
-                    bundle.putSerializable("doctor_list", (Serializable) list);
-                    listener.onDataRetrieved(API_GET_DOCTOR_LIST, bundle);
+                    Bundle b=new Bundle();
+                    b.putSerializable("doctor_list", (Serializable) list);
+                    listener.onDataRetrieved(API_GET_DOCTOR_LIST, b);
                 }
 
                 @Override
@@ -241,6 +242,25 @@ public class ApiBackgroundTask {
                             Log.e("TAG", "onFailure: "+ t.getMessage());
                         }
                     });
+        }
+    }
+
+    public void insertMedicineDetails(MedicineDetails details, final OnDataRetrievedListener listener){
+        if(listener!=null){
+            apiInterface.insertMedicineDetails("insertMedicineDetails", details.getMedicine(), details.getDoctor(), details.getPatient(), details.getTime(), details.isMorning(), details.isDay(), details.isNight(), details.getRating())
+            .enqueue(new Callback<PostResponse>() {
+                @Override
+                public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                    Bundle b=new Bundle();
+                    b.putSerializable("response", (Serializable) response.body());
+                    listener.onDataRetrieved(INSERT_MEDICINE, b);
+                }
+
+                @Override
+                public void onFailure(Call<PostResponse> call, Throwable t) {
+                    Log.e("TAG", "onFailure: "+t.getMessage());
+                }
+            });
         }
     }
 }

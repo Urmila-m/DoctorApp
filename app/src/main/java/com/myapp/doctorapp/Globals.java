@@ -20,6 +20,7 @@ public class Globals extends Application {
     public static final String ALERT_POP_UP="AlertDialog";
     public static final String SET_APPOINTMENT="SetAppointment";
     public static final String GET_APPOINT_DETAILS="GetAppointmentDetails";
+    public static final String INSERT_MEDICINE="InsertMedicineDetails";
 
 
 
