@@ -31,15 +31,6 @@ public class MainActivity extends PreferenceInitializingActivity implements View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up_options_layout);
 
-//        AccessToken accessToken=AccessToken.getCurrentAccessToken();
-//        boolean isLogin=accessToken!=null&&!accessToken.isExpired();
-//
-//        if (isLogin){
-//            startActivity(new Intent(this, AfterLoginActivity.class));
-//        }
-//
-//        else {
-
             tvSignUpEmailPhone=findViewById(R.id.tv_sign_up_options_email_phone);
             btnSignUp = findViewById(R.id.btn_sign_up_options_fb);
 
@@ -48,7 +39,7 @@ public class MainActivity extends PreferenceInitializingActivity implements View
 
             apiTask = new ApiBackgroundTask();
             task = new SignUpWithFacebookTask(this);
-//        }
+
     }
 
     @Override

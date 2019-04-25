@@ -12,6 +12,7 @@ import com.myapp.doctorapp.model.IdModel;
 import com.myapp.doctorapp.model.MedicineDetails;
 import com.myapp.doctorapp.model.PostResponse;
 import com.myapp.doctorapp.model.User;
+import com.myapp.doctorapp.model.VerificationResponse;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,11 +28,13 @@ import static com.myapp.doctorapp.Globals.API_GET_ID_LIST;
 import static com.myapp.doctorapp.Globals.API_GET_USER;
 import static com.myapp.doctorapp.Globals.API_INSERT;
 import static com.myapp.doctorapp.Globals.API_UPDATE_PROFILE;
+import static com.myapp.doctorapp.Globals.CHECK_VERIFICATION;
 import static com.myapp.doctorapp.Globals.GET_APPOINT_DETAILS;
 import static com.myapp.doctorapp.Globals.GET_MY_MEDICINE;
 import static com.myapp.doctorapp.Globals.GET_USER_USING_ID;
 import static com.myapp.doctorapp.Globals.INSERT_MEDICINE;
 import static com.myapp.doctorapp.Globals.SET_APPOINTMENT;
+import static com.myapp.doctorapp.Globals.VERIFY_USER;
 import static com.myapp.doctorapp.Globals.anInt;
 
 public class ApiBackgroundTask {
@@ -280,6 +283,46 @@ public class ApiBackgroundTask {
 
                         @Override
                         public void onFailure(Call<List<MedicineDetails>> call, Throwable t) {
+                            Log.e("TAG", "onFailure: "+t.getMessage());
+                        }
+                    });
+        }
+    }
+
+    public void verifyUser(String patientEmail, final OnDataRetrievedListener listener){
+        if (listener!=null){
+            apiInterface.verifyUser("verifyUser", patientEmail)
+                    .enqueue(new Callback<PostResponse>() {
+                        @Override
+                        public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                            Bundle b=new Bundle();
+                            b.putSerializable("response", response.body());
+                            listener.onDataRetrieved(VERIFY_USER, b);
+                        }
+
+                        @Override
+                        public void onFailure(Call<PostResponse> call, Throwable t) {
+                            Log.e("TAG", "onFailure: "+t.getMessage());
+                        }
+                    });
+        }
+    }
+
+    public void checkVerification(String patientEmail, final OnDataRetrievedListener listener){
+        if (listener!=null){
+            apiInterface.checkVerification("checkVerification", patientEmail)
+                    .enqueue(new Callback<VerificationResponse>() {
+                        @Override
+                        public void onResponse(Call<VerificationResponse> call, Response<VerificationResponse> response) {
+                            Bundle b=new Bundle();
+                            b.putSerializable("verified", (Serializable) response.body());
+                            VerificationResponse response1=response.body();
+                            Log.e("TAG", "onResponse: "+response1.getVerified());
+                            listener.onDataRetrieved(CHECK_VERIFICATION, b);
+                        }
+
+                        @Override
+                        public void onFailure(Call<VerificationResponse> call, Throwable t) {
                             Log.e("TAG", "onFailure: "+t.getMessage());
                         }
                     });

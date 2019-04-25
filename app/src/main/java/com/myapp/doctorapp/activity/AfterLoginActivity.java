@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
+import com.google.firebase.auth.FirebaseAuth;
 import com.myapp.doctorapp.R;
 import com.myapp.doctorapp.backgroundtasks.ApiBackgroundTask;
 import com.myapp.doctorapp.backgroundtasks.NotificationAlarmThread;
@@ -199,20 +200,7 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
            apiTask.getAppointmentDetails(preferences.getString("name", ""), this);
 
         } else if (id == R.id.nav_log_out) {
-           editor.clear().commit();
-           LoginManager.getInstance().logOut();//fb sign in vaye
-           Intent intent=new Intent(AfterLoginActivity.this, SignInActivity.class);
-
-           for (PendingIntent pi:listOfPI
-                ) {
-               alarmManager.cancel(pi);
-           }
-           for (PendingIntent pi:medicineListOfPI
-                ) {
-               alarmManager.cancel(pi);
-           }
-           startActivity(intent);
-           finish();
+            logOut();
 
         }
 
@@ -447,6 +435,27 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
     protected void onStop() {
         super.onStop();
         Log.e("TAG", "onStop: ");
+    }
+
+    private void logOut(){
+        editor.clear().commit();
+        LoginManager.getInstance().logOut();//fb sign in vaye
+
+//        if (FirebaseAuth.getInstance().getCurrentUser()!=null) {
+//            FirebaseAuth.getInstance().signOut();
+//        }
+        Intent intent=new Intent(AfterLoginActivity.this, SignInActivity.class);
+
+        for (PendingIntent pi:listOfPI
+        ) {
+            alarmManager.cancel(pi);
+        }
+        for (PendingIntent pi:medicineListOfPI
+        ) {
+            alarmManager.cancel(pi);
+        }
+        startActivity(intent);
+        finish();
     }
 
 }

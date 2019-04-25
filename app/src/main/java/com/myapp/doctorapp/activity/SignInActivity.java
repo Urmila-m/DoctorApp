@@ -9,15 +9,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.myapp.doctorapp.R;
 import com.myapp.doctorapp.backgroundtasks.ApiBackgroundTask;
 import com.myapp.doctorapp.backgroundtasks.CheckFbRegistrationTask;
 import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.model.EmailPasswordResponse;
 import com.myapp.doctorapp.model.IdModel;
+import com.myapp.doctorapp.model.PostResponse;
 import com.myapp.doctorapp.model.User;
+import com.myapp.doctorapp.model.VerificationResponse;
 import com.myapp.doctorapp.services.NotificationService;
 
 import java.util.ArrayList;
@@ -27,7 +33,9 @@ import static com.myapp.doctorapp.Globals.API_GET_EMAIL;
 import static com.myapp.doctorapp.Globals.API_GET_ID_LIST;
 import static com.myapp.doctorapp.Globals.API_GET_USER;
 import static com.myapp.doctorapp.Globals.CHECK_REGISTRATION;
+import static com.myapp.doctorapp.Globals.CHECK_VERIFICATION;
 import static com.myapp.doctorapp.Globals.GET_USER_USING_ID;
+import static com.myapp.doctorapp.Globals.VERIFY_USER;
 import static com.myapp.doctorapp.Globals.addUserToPreference;
 
 public class SignInActivity extends PreferenceInitializingActivity implements View.OnClickListener, OnDataRetrievedListener {
@@ -39,6 +47,7 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
     EditText etPassword;
     String email, password;
     String activeId;
+    User user2;
 
     ApiBackgroundTask apiTask;
     CheckFbRegistrationTask checkFbRegistrationTask;
@@ -47,6 +56,29 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_in_layout);
+
+        apiTask=new ApiBackgroundTask();
+        FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser!=null ){
+            Log.e("TAG", "onCreate: User not null"+firebaseUser.getEmail());
+            firebaseUser.reload()
+            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    FirebaseUser reloadedUser=FirebaseAuth.getInstance().getCurrentUser();
+                    if (reloadedUser.isEmailVerified()){
+                        Log.e("TAG", "onCreate: "+reloadedUser.getEmail());
+                        apiTask.verifyUser(reloadedUser.getEmail(), SignInActivity.this);
+                        FirebaseAuth.getInstance().signOut();
+                    }
+                }
+            });
+//            if (firebaseUser.isEmailVerified()) {
+//                Log.e("TAG", "onCreate: "+firebaseUser.getEmail());
+//                apiTask.verifyUser(firebaseUser.getEmail(), this);
+//                FirebaseAuth.getInstance().signOut();
+//            }
+        }
 
         AccessToken accessToken=AccessToken.getCurrentAccessToken();
         boolean isLogin=accessToken!=null&&!accessToken.isExpired();
@@ -72,7 +104,6 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
         btnManualSignIn.setOnClickListener(this);
         signInFb.setOnClickListener(this);
 
-        apiTask=new ApiBackgroundTask();
         checkFbRegistrationTask=new CheckFbRegistrationTask(this);
     }
 
@@ -94,7 +125,6 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
         }
         else if(v==signInFb){
             Log.e("TAG", "onClick: sign in with fb clicked");
-            //TODO FacebookTask chainxa, tyabata aako email ra database ma vako email compare garne, milyo vane afterloginActivity
             checkFbRegistrationTask.registerFbCallback();
 
         }
@@ -126,10 +156,10 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
         }
 
         else if (source.equals(API_GET_USER)){
-            User user= (User) bundle.getSerializable("User");
-            addUserToPreference(editor, user);
-            startActivity(new Intent(SignInActivity.this, AfterLoginActivity.class));
-            finish();
+            user2= (User) bundle.getSerializable("User");
+            Log.e("TAG", "onDataRetrieved: "+user2.toString());
+            apiTask.checkVerification(user2.getEmail(), this);
+
         }
 
         else if(source.equals(CHECK_REGISTRATION)){
@@ -159,8 +189,25 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
             addUserToPreference(editor, user);
             startActivity(new Intent(SignInActivity.this, AfterLoginActivity.class));
             finish();
+        }
 
+        else if (source.equals(CHECK_VERIFICATION)){
+            VerificationResponse response= (VerificationResponse) bundle.getSerializable("verified");
+            if (response.getVerified()==1){
+                addUserToPreference(editor, user2);
+                startActivity(new Intent(SignInActivity.this, AfterLoginActivity.class));
+                finish();
 
+            }
+
+            else {
+                Toast.makeText(this, "User is not verified", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        else if (source.equals(VERIFY_USER)){
+            PostResponse response= (PostResponse) bundle.getSerializable("response");
+            Log.e("TAG", "onDataRetrieved: "+response.getErrorMsg());
         }
     }
 }

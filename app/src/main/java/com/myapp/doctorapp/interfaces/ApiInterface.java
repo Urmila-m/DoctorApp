@@ -9,6 +9,7 @@ import com.myapp.doctorapp.model.IdModel;
 import com.myapp.doctorapp.model.MedicineDetails;
 import com.myapp.doctorapp.model.PostResponse;
 import com.myapp.doctorapp.model.User;
+import com.myapp.doctorapp.model.VerificationResponse;
 
 import java.util.List;
 
@@ -94,6 +95,16 @@ public interface ApiInterface {
     @FormUrlEncoded
     Call<List<MedicineDetails>> getMyMedicines(@Field("action") String getMyMedicine,
                                                @Field("patient") String patient);
+
+    @POST("doctorAppAPI.php")
+    @FormUrlEncoded
+    Call<PostResponse> verifyUser(@Field("action") String verifyUser,
+                                  @Field("patientEmail") String patientEmail);
+
+    @POST("doctorAppAPI.php")
+    @FormUrlEncoded
+    Call<VerificationResponse> checkVerification(@Field("action") String checkVerification,
+                                                 @Field("patientEmail") String patientEmail);
 
 }
 

@@ -20,9 +20,11 @@ import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
 import com.myapp.doctorapp.model.User;
 import com.myapp.doctorapp.services.NotificationService;
 
+import java.security.AuthProvider;
 import java.util.Set;
 
 import static com.myapp.doctorapp.Globals.API_INSERT;
+import static com.myapp.doctorapp.Globals.VERIFY_USER;
 import static com.myapp.doctorapp.Globals.addUserToPreference;
 import static com.myapp.doctorapp.Globals.bundleToUser;
 
@@ -54,24 +56,33 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
 
         if (id==R.id.btn_custom_attribute_picker){
             final User user=bundleToUser(registrationInfo);
-            addUserToPreference(editor, user);
+            apiTask.insertResponse(registrationInfo, this);
             Log.e("TAG", "onButtonClicked: "+user.getEmail());
-            firebaseAuth.createUserWithEmailAndPassword(user.getName(), user.getPassword())
+            firebaseAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword())
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 firebaseAuth.signInWithEmailAndPassword(user.getEmail(), user.getPassword());
+                                //Todo isEmailVerified returns false even when link clicked
                                 Toast.makeText(BeforeLoginActivity.this, "Email registered successfully", Toast.LENGTH_SHORT).show();
                                 firebaseAuth.getCurrentUser().sendEmailVerification()
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 Log.e("TAG", "onComplete: verify your email");
+                                                startActivity(new Intent(BeforeLoginActivity.this, SignInActivity.class));
+
                                             }
                                         });
 
-                                startActivity(new Intent(BeforeLoginActivity.this, SignInActivity.class));
+//                                if (firebaseAuth.getCurrentUser().isEmailVerified()) {//TODO milaunu parxa
+//                                    addUserToPreference(editor, user);
+//                                    apiTask.verifyUser(user.getEmail(), BeforeLoginActivity.this);
+//                                    startActivity(new Intent(BeforeLoginActivity.this, AfterLoginActivity.class));
+//                                }
+//                                else
+//                                    startActivity(new Intent(BeforeLoginActivity.this, SignInActivity.class));
                             }
 
                             else {
@@ -79,7 +90,6 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
                             }
                         }
                     });
-//            apiTask.insertResponse(registrationInfo, this);
 
         }
 
@@ -94,6 +104,10 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
         if (source.equals(API_INSERT)){
             Log.e("TAG", "onDataRetrieved: registration successful"+bundle.getString("errorMsg"));
 
+        }
+
+        else if (source.equals(VERIFY_USER)){
+            Log.e("TAG", "onDataRetrieved: user verified");
         }
     }
 }

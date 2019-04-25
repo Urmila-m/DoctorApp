@@ -22,6 +22,9 @@ public class Globals extends Application {
     public static final String GET_APPOINT_DETAILS="GetAppointmentDetails";
     public static final String INSERT_MEDICINE="InsertMedicineDetails";
     public static final String GET_MY_MEDICINE="GetmedicineList";
+    public static final String VERIFY_USER="VerifyUser";
+    public static final String CHECK_VERIFICATION="CheckVerification";
+
 
 
 
@@ -35,6 +38,7 @@ public class Globals extends Application {
         String id=(bundle.getString("id")==null)?"1":bundle.getString("id");
         String image=(bundle.getString("image")==null)?"R.drawable.default_image":bundle.getString("image");
         String blood=(bundle.getString("blood"))==null?"not set yet":bundle.getString("blood");
+
 
         user.setName(bundle.getString("name"));
         user.setId(id);
