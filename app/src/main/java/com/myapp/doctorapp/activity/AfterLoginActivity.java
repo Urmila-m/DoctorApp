@@ -32,6 +32,7 @@ import com.myapp.doctorapp.backgroundtasks.NotificationAlarmThread;
 import com.myapp.doctorapp.fragments.FindDoctorFragment;
 import com.myapp.doctorapp.fragments.HomeFragment;
 import com.myapp.doctorapp.fragments.MyAppointmentFragment;
+import com.myapp.doctorapp.fragments.MyMedicineFragment;
 import com.myapp.doctorapp.fragments.ProfileFragment;
 import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
@@ -41,6 +42,7 @@ import com.myapp.doctorapp.model.PostResponse;
 import com.myapp.doctorapp.services.NotificationService;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,6 +56,7 @@ import static com.myapp.doctorapp.Globals.ALERT_POP_UP;
 import static com.myapp.doctorapp.Globals.API_GET_DOCTOR_LIST;
 import static com.myapp.doctorapp.Globals.API_UPDATE_PROFILE;
 import static com.myapp.doctorapp.Globals.GET_APPOINT_DETAILS;
+import static com.myapp.doctorapp.Globals.GET_MY_MEDICINE;
 import static com.myapp.doctorapp.Globals.INSERT_MEDICINE;
 import static com.myapp.doctorapp.Globals.SET_APPOINTMENT;
 
@@ -110,7 +113,7 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
 //        startService(intent1);
 
         Intent intent=getIntent();
-        if (intent!=null){
+        if (intent.getExtras()!=null){
             MedicineDetails details=new MedicineDetails(preferences.getString("name", ""), intent.getStringExtra("doctor"),
                     intent.getStringExtra("time"), intent.getStringExtra("medicine"), intent.getBooleanExtra("day", false),
                     intent.getBooleanExtra("morning", false), intent.getBooleanExtra("night", false),
@@ -282,6 +285,10 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
             getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).commit();
         }
 
+        else if (id==R.id.my_medicine_block){
+            apiTask.getMyMedicine(preferences.getString("name", ""), this);
+        }
+
     }
 
     void setNavHeaderElements(){
@@ -338,6 +345,13 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         else if (source.equals(INSERT_MEDICINE)){
             PostResponse response= (PostResponse) bundle.getSerializable("response");
             Log.e("TAG", "onDataRetrieved: "+response.getErrorMsg());
+        }
+
+        else if (source.equals(GET_MY_MEDICINE)){
+            MyMedicineFragment fragment=new MyMedicineFragment();
+//            List<MedicineDetails> list= (List<MedicineDetails>) bundle.getSerializable("medicineList");
+            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).commit();
         }
     }
 

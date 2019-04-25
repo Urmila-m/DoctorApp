@@ -74,6 +74,7 @@ public class MedicineActivity extends PreferenceInitializingActivity implements 
             intent.putExtra("rating", rating);
             intent.putExtra("doctor", doctor);
             startActivity(intent);
+            finish();
         }
     }
 }

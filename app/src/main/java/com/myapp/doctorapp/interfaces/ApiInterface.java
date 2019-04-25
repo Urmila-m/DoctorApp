@@ -6,6 +6,7 @@ import com.myapp.doctorapp.model.AppointmentDetail;
 import com.myapp.doctorapp.model.Doctor;
 import com.myapp.doctorapp.model.EmailPasswordResponse;
 import com.myapp.doctorapp.model.IdModel;
+import com.myapp.doctorapp.model.MedicineDetails;
 import com.myapp.doctorapp.model.PostResponse;
 import com.myapp.doctorapp.model.User;
 
@@ -88,6 +89,11 @@ public interface ApiInterface {
                                              @Field("day") boolean day,
                                              @Field("night") boolean night,
                                              @Field("rating") float rating);
+
+    @POST("doctorAppAPI.php")
+    @FormUrlEncoded
+    Call<List<MedicineDetails>> getMyMedicines(@Field("action") String getMyMedicine,
+                                               @Field("patient") String patient);
 
 }
 

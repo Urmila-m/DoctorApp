@@ -1,4 +1,4 @@
-package com.myapp.doctorapp.backgroundtasks;
+package com.myapp.doctorapp.backgroundtasks;//not used anywhere at the moment
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

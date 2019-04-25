@@ -28,6 +28,7 @@ import static com.myapp.doctorapp.Globals.API_GET_USER;
 import static com.myapp.doctorapp.Globals.API_INSERT;
 import static com.myapp.doctorapp.Globals.API_UPDATE_PROFILE;
 import static com.myapp.doctorapp.Globals.GET_APPOINT_DETAILS;
+import static com.myapp.doctorapp.Globals.GET_MY_MEDICINE;
 import static com.myapp.doctorapp.Globals.GET_USER_USING_ID;
 import static com.myapp.doctorapp.Globals.INSERT_MEDICINE;
 import static com.myapp.doctorapp.Globals.SET_APPOINTMENT;
@@ -261,6 +262,27 @@ public class ApiBackgroundTask {
                     Log.e("TAG", "onFailure: "+t.getMessage());
                 }
             });
+        }
+    }
+
+    public void getMyMedicine(String patient, final OnDataRetrievedListener listener){
+        if(listener!=null){
+            apiInterface.getMyMedicines("getMyMedicine", patient)
+                    .enqueue(new Callback<List<MedicineDetails>>() {
+                        @Override
+                        public void onResponse(Call<List<MedicineDetails>> call, Response<List<MedicineDetails>> response) {
+                            Log.e("TAG", "onResponse: "+response.toString());
+                            List<MedicineDetails> medicineList=medicineList=response.body();
+                            Bundle b=new Bundle();
+                            b.putSerializable("medicineList", (Serializable) medicineList);
+                            listener.onDataRetrieved(GET_MY_MEDICINE, b);
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<MedicineDetails>> call, Throwable t) {
+                            Log.e("TAG", "onFailure: "+t.getMessage());
+                        }
+                    });
         }
     }
 }

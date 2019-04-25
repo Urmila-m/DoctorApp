@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="@dimen/corner_radius"
+    android:elevation="@dimen/elevation"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/all_padding">
+
+        <TextView
+            android:id="@+id/tv_list_medicine"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/normal_text_size"
+            android:textStyle="bold"
+            android:text="@string/medicine"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/tv_list_doctor"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/normal_text_size"
+            android:textStyle="bold"
+            android:text="@string/medicine"
+            android:gravity="center"
+            />
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

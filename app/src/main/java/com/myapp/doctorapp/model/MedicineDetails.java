@@ -1,8 +1,15 @@
 package com.myapp.doctorapp.model;
 
-public class MedicineDetails{
-    private String patient, doctor, time, medicine;
-    private boolean day, morning, night;
+import java.io.Serializable;
+
+public class MedicineDetails implements Serializable {
+    private String patient;
+    private String doctor;
+    private String time;
+    private String medicine;
+    private boolean day;
+    private boolean morning;
+    private boolean night;
     private float rating;
 
     public MedicineDetails(String patient, String doctor, String time, String medicine, boolean day, boolean morning, boolean night, float rating) {

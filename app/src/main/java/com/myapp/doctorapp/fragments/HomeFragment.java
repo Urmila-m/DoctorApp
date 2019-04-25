@@ -17,11 +17,12 @@ import com.myapp.doctorapp.backgroundtasks.ApiBackgroundTask;
 import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements View.OnClickListener {
 
     OnFragmentButtonClickListener listener;
     LinearLayout findDoctorBlock;
     LinearLayout appoinmentBlock;
+    LinearLayout medicineBlock;
     Context context;
 
     public HomeFragment() {
@@ -49,24 +50,27 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         findDoctorBlock=view.findViewById(R.id.find_doctor_block);
         appoinmentBlock=view.findViewById(R.id.home_appointment);
+        medicineBlock=view.findViewById(R.id.my_medicine_block);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        findDoctorBlock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e("TAG", "onClick: Home Fragment");
-                listener.onButtonClicked(findDoctorBlock.getId(), new FindDoctorFragment(), new Bundle());
-            }
-        });
+        findDoctorBlock.setOnClickListener(this);
+        appoinmentBlock.setOnClickListener(this);
+        medicineBlock.setOnClickListener(this);
+    }
 
-        appoinmentBlock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onButtonClicked(R.id.home_appointment, new MyAppointmentFragment(), new Bundle());
-            }
-        });
+    @Override
+    public void onClick(View v) {
+        if (v==findDoctorBlock){
+            listener.onButtonClicked(findDoctorBlock.getId(), new FindDoctorFragment(), new Bundle());
+        }
+        else if (v==appoinmentBlock){
+            listener.onButtonClicked(R.id.home_appointment, new MyAppointmentFragment(), new Bundle());
+        }
+        else if (v==medicineBlock){
+            listener.onButtonClicked(R.id.my_medicine_block, new MyMedicineFragment(), new Bundle());
+        }
     }
 }
