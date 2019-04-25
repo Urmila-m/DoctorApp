@@ -1,10 +1,17 @@
 package com.myapp.doctorapp.activity;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.ActionCodeSettings;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.myapp.doctorapp.R;
 import com.myapp.doctorapp.backgroundtasks.ApiBackgroundTask;
 import com.myapp.doctorapp.fragments.ManualSignUpFragment;
@@ -23,6 +30,7 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
 
     Bundle registrationInfo;
     ApiBackgroundTask apiTask;
+    FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +39,7 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
 
         registrationInfo = new Bundle();
         apiTask = new ApiBackgroundTask();
-
+        firebaseAuth=FirebaseAuth.getInstance();
         getSupportFragmentManager().beginTransaction().add(R.id.fl_before_login, new ManualSignUpFragment()).commit();
     }
 
@@ -45,10 +53,34 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
         }
 
         if (id==R.id.btn_custom_attribute_picker){
-            User user=bundleToUser(registrationInfo);
+            final User user=bundleToUser(registrationInfo);
             addUserToPreference(editor, user);
-            apiTask.insertResponse(registrationInfo, this);
-            startActivity(new Intent(BeforeLoginActivity.this, AfterLoginActivity.class));
+            Log.e("TAG", "onButtonClicked: "+user.getEmail());
+            firebaseAuth.createUserWithEmailAndPassword(user.getName(), user.getPassword())
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()){
+                                firebaseAuth.signInWithEmailAndPassword(user.getEmail(), user.getPassword());
+                                Toast.makeText(BeforeLoginActivity.this, "Email registered successfully", Toast.LENGTH_SHORT).show();
+                                firebaseAuth.getCurrentUser().sendEmailVerification()
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                Log.e("TAG", "onComplete: verify your email");
+                                            }
+                                        });
+
+                                startActivity(new Intent(BeforeLoginActivity.this, SignInActivity.class));
+                            }
+
+                            else {
+                                Log.e("TAG", "onComplete: "+task.getException().getMessage());
+                            }
+                        }
+                    });
+//            apiTask.insertResponse(registrationInfo, this);
+
         }
 
         else {
@@ -61,6 +93,7 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
     public void onDataRetrieved(String source, Bundle bundle) {
         if (source.equals(API_INSERT)){
             Log.e("TAG", "onDataRetrieved: registration successful"+bundle.getString("errorMsg"));
+
         }
     }
 }

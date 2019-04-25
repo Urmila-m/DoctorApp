@@ -62,9 +62,9 @@ public class ManualSignUpFragment extends Fragment {
                 int count=0;
                 Bundle bundle=new Bundle();
                 String name=etName.getText().toString();
-                String email=etEmail.getText().toString();
+                String email=etEmail.getText().toString().trim();
                 String mobile=etMobile.getText().toString();
-                String password=etPass.getText().toString();
+                String password=etPass.getText().toString().trim();
                 String confirmPass=etConfirmPass.getText().toString();
 
                 bundle.putString("name", name);

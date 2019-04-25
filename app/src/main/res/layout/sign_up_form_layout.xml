@@ -29,6 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/emaiil"
+        android:inputType="textEmailAddress"
         android:background="@drawable/edit_text_background"
         android:layout_marginTop="@dimen/margin_20"
         android:padding="@dimen/all_padding"
