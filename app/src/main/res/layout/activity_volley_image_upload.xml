@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,64 +11,65 @@
         android:id="@+id/iv_upload_image"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
         android:src="@drawable/person"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="1" />
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/textInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:paddingTop="@dimen/all_padding"
-        app:errorEnabled="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_upload_image"
-        android:visibility="gone">
-
-        <!--cannot use space, or special characters ecxcept _ in image name-->
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/et_upload_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/upload_image_name" />
-    </android.support.design.widget.TextInputLayout>
+        android:layout_gravity="center"
+        tools:ignore="Suspicious0dp"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        tools:ignore="Suspicious0dp">
 
-        <Button
-            android:id="@+id/btn_choose_image"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="@dimen/all_padding"
-            android:layout_weight="1"
-            android:background="@drawable/button_background"
-            android:text="@string/choose_image" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_image_upload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/all_padding"
+            app:errorEnabled="true"
+            android:visibility="gone"
+            >
 
-        <Button
-            android:id="@+id/btn_upload_image"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/all_padding"
-            android:layout_weight="1"
-            android:background="@drawable/button_background"
-            android:text="@string/upload_image"
-            android:visibility="gone"/>
+            <!--cannot use space, or special characters ecxcept _ in image name-->
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/et_upload_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/upload_image_name" />
 
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <Button
+                android:id="@+id/btn_choose_image"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/all_padding"
+                android:layout_marginTop="@dimen/margin_20"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:text="@string/choose_image" />
+
+            <Button
+                android:id="@+id/btn_upload_image"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/all_padding"
+                android:layout_marginTop="@dimen/margin_20"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:text="@string/upload_image"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
