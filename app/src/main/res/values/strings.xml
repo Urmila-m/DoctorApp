@@ -17,7 +17,7 @@
     <string name="password">Password</string>
     <string name="password_hint">Password (min 8 chars)</string>
     <string name="confirm_password">Confirm Password</string>
-    <string name="forgot_password">Forgot Password</string>
+    <string name="forgot_password">Forgot Password?</string>
     <string name="reset_link_text">We just need your registered email ID to send reset link</string>
     <string name="reset_password">Reset Password</string>
     <string name="birthday">Your Birthday</string>
@@ -115,5 +115,13 @@
     <string name="medicine_prescription">Medicines prescribed by</string>
     <string name="submit">Submit</string>
     <string name="my_medicine">My Medicines</string>
+    <string name="change_password">Change password</string>
+    <string name="old_password">Enter your current password</string>
+    <string name="new_password">Enter new password</string>
+    <string name="re_enter_new_password">Re-enter new password</string>
+    <string name="save_changes">Save changes</string>
+    <string name="upload_image_name">Enter name of the image</string>
+    <string name="choose_image">Choose Image</string>
+    <string name="upload_image">Upload Image</string>
 
 </resources>

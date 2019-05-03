@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.myapp.doctorapp.Globals.*;
 
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
 import com.myapp.doctorapp.R;
@@ -20,7 +22,8 @@ import com.myapp.doctorapp.R;
 public class ManualSignUpFragment extends Fragment {
 
     OnFragmentButtonClickListener listener;
-    EditText etName, etEmail, etMobile, etPass, etConfirmPass;
+    EditText etName, etEmail, etMobile;
+    TextInputEditText etPass, etConfirmPass;
     Button btnSubmit;
 
     @Nullable
@@ -28,10 +31,6 @@ public class ManualSignUpFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.sign_up_form_layout, container, false);
         return view;
-    }
-
-    boolean isValidEmail(String email){
-        return(!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
     @Override
@@ -101,5 +100,9 @@ public class ManualSignUpFragment extends Fragment {
                 }
             }
         });
+    }
+
+    public boolean isValidEmail(String email){
+        return(!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 }

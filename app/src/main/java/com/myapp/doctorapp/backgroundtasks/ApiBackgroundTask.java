@@ -33,9 +33,9 @@ import static com.myapp.doctorapp.Globals.GET_APPOINT_DETAILS;
 import static com.myapp.doctorapp.Globals.GET_MY_MEDICINE;
 import static com.myapp.doctorapp.Globals.GET_USER_USING_ID;
 import static com.myapp.doctorapp.Globals.INSERT_MEDICINE;
+import static com.myapp.doctorapp.Globals.RESET_PASSWORD;
 import static com.myapp.doctorapp.Globals.SET_APPOINTMENT;
 import static com.myapp.doctorapp.Globals.VERIFY_USER;
-import static com.myapp.doctorapp.Globals.anInt;
 
 public class ApiBackgroundTask {
     private ApiInterface apiInterface;
@@ -50,7 +50,7 @@ public class ApiBackgroundTask {
             String weight=(bundle.getString("weight")==null)?"0":bundle.getString("weight");
             String password=(bundle.getString("password")==null)?"":bundle.getString("password");
             String mobile=(bundle.getString("mobile")==null)?"":bundle.getString("mobile");
-            String id=(bundle.getString("id")==null)?(anInt++)+"":bundle.getString("id");
+            String id=(bundle.getString("id")==null)?"0":bundle.getString("id");
             String image=(bundle.getString("image")==null)?"R.drawable.default_image":bundle.getString("image");
 
             apiInterface.insertData("insertData",
@@ -326,6 +326,25 @@ public class ApiBackgroundTask {
                             Log.e("TAG", "onFailure: "+t.getMessage());
                         }
                     });
+        }
+    }
+
+    public void resetPassword(String patientEmail, String newPassword, final OnDataRetrievedListener listener){
+        if (listener!=null){
+            apiInterface.resetPassword("resetPassword", patientEmail, newPassword)
+            .enqueue(new Callback<PostResponse>() {
+                @Override
+                public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                    Bundle b=new Bundle();
+                    b.putSerializable("response", response.body());
+                    listener.onDataRetrieved(RESET_PASSWORD, b);
+                }
+
+                @Override
+                public void onFailure(Call<PostResponse> call, Throwable t) {
+                    Log.e("TAG", "onFailure: "+t.getMessage());
+                }
+            });
         }
     }
 }

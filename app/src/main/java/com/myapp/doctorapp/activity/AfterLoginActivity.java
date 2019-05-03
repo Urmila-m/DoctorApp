@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.myapp.doctorapp.R;
 import com.myapp.doctorapp.backgroundtasks.ApiBackgroundTask;
 import com.myapp.doctorapp.backgroundtasks.NotificationAlarmThread;
+import com.myapp.doctorapp.fragments.ChangePasswordFragment;
 import com.myapp.doctorapp.fragments.FindDoctorFragment;
 import com.myapp.doctorapp.fragments.HomeFragment;
 import com.myapp.doctorapp.fragments.MyAppointmentFragment;
@@ -59,6 +60,7 @@ import static com.myapp.doctorapp.Globals.API_UPDATE_PROFILE;
 import static com.myapp.doctorapp.Globals.GET_APPOINT_DETAILS;
 import static com.myapp.doctorapp.Globals.GET_MY_MEDICINE;
 import static com.myapp.doctorapp.Globals.INSERT_MEDICINE;
+import static com.myapp.doctorapp.Globals.RESET_PASSWORD;
 import static com.myapp.doctorapp.Globals.SET_APPOINTMENT;
 
 public class AfterLoginActivity extends PreferenceInitializingActivity
@@ -107,11 +109,6 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
                 AfterLoginActivity.this.addPIofToday(list, medicineListOfPI, "medicine");
             }
         });
-//        Intent intent1=new Intent(this, NotificationService.class);
-//        intent1.putExtra("title", "Post Appointment Medicine Details");
-//        intent1.putExtra("message", "The appointment you had with "+"Samriddhi Shakya"+"3 hrs ago needs to be reviewed");
-//        intent1.putExtra("doctor", "Doctor");
-//        startService(intent1);
 
         Intent intent=getIntent();
         if (intent.getExtras()!=null){
@@ -146,6 +143,13 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
 
         setNavHeaderElements();
         navigationView.setNavigationItemSelectedListener(this);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO load image upload activity
+                startActivity(new Intent(AfterLoginActivity.this, VolleyImageUploadActivity.class));
+            }
+        });
 
     }
 
@@ -202,7 +206,19 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         } else if (id == R.id.nav_log_out) {
             logOut();
 
-        }
+        } else if (id==R.id.nav_change_password){
+           if (preferences.getString("password", "").equals("")){
+               Toast.makeText(this, "You signed up using facebook. No password required!!", Toast.LENGTH_SHORT).show();
+
+           }
+           else {
+               Fragment fragment = new ChangePasswordFragment();
+               Bundle b = new Bundle();
+               b.putString("currentPassword", preferences.getString("password", ""));
+               fragment.setArguments(b);
+               getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).addToBackStack(null).commit();
+           }
+       }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -277,6 +293,12 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
             apiTask.getMyMedicine(preferences.getString("name", ""), this);
         }
 
+        else if (id==R.id.btn_change_password_save){
+            editor.putString("password", bundle.getString("newPassword")).commit();
+            getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).commit();
+            apiTask.resetPassword(preferences.getString("email", ""), bundle.getString("newPassword"), this);
+        }
+
     }
 
     void setNavHeaderElements(){
@@ -340,6 +362,11 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
 //            List<MedicineDetails> list= (List<MedicineDetails>) bundle.getSerializable("medicineList");
             fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).commit();
+        }
+
+        else if (source.equals(RESET_PASSWORD)){
+            PostResponse response= (PostResponse) bundle.getSerializable("response");
+            Log.e("TAG", "onDataRetrieved: "+response.getErrorMsg());
         }
     }
 

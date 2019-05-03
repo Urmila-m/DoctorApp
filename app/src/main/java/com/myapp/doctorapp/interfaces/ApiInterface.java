@@ -106,5 +106,11 @@ public interface ApiInterface {
     Call<VerificationResponse> checkVerification(@Field("action") String checkVerification,
                                                  @Field("patientEmail") String patientEmail);
 
+    @POST("doctorAppAPI.php")
+    @FormUrlEncoded
+    Call<PostResponse> resetPassword(@Field("action") String resetPassword,
+                                     @Field("patientEmail") String Email,
+                                     @Field("newPassword") String newPassword);
+
 }
 

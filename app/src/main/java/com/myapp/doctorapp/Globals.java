@@ -3,11 +3,12 @@ package com.myapp.doctorapp;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 
 import com.myapp.doctorapp.model.User;
 
 public class Globals extends Application {
-    public static int anInt;
     public static final String API_INSERT="ApiBgTaskInsert";
     public static final String CHECK_REGISTRATION="CheckFbRegistrationTask";
     public static final String API_UPDATE_PROFILE="ApiBgTaskUpdateProfile";
@@ -24,10 +25,11 @@ public class Globals extends Application {
     public static final String GET_MY_MEDICINE="GetmedicineList";
     public static final String VERIFY_USER="VerifyUser";
     public static final String CHECK_VERIFICATION="CheckVerification";
+    public static final String RESET_PASSWORD="ResetPassword";
 
-
-
-
+    public boolean isValidEmail(String email){
+        return(!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
+    }
 
     public static User bundleToUser(Bundle bundle){
         User user=new User();

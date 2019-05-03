@@ -33,12 +33,14 @@
 
     >
         <TextView
+            android:id="@+id/tv_initial_medicine_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/title_text_size"
             android:gravity="center"
             android:text="@string/medicine"
             android:textStyle="bold"
+            android:clickable="true"
             android:layout_marginVertical="@dimen/margin_20"/>
 
         <TextView

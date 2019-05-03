@@ -24,9 +24,9 @@
     <item android:title="@string/account_settings">
         <menu>
             <item
-                android:id="@+id/jpt"
+                android:id="@+id/nav_change_password"
                 android:icon="@drawable/call_icon"
-                android:title="One extra menu"/>
+                android:title="@string/change_password"/>
 
             <item
                 android:id="@+id/nav_log_out"

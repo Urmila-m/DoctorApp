@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-   style="@style/base_layout_style"
-    >
+    style="@style/base_layout_style">
 
     <TextView
         android:layout_width="match_parent"
@@ -11,42 +11,65 @@
         android:text="@string/sign_in"
         style="@style/title_style"/>
 
-    <EditText
-        android:id="@+id/et_email_sign_in"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/edit_text_style"
-        android:hint="@string/emaiil"
-        />
-
-    <EditText
-        android:id="@+id/et_password_sign_in"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/edit_text_style"
-        android:hint="@string/password"
-        />
-
-    <!--<LinearLayout-->
+    <!--<android.support.design.widget.TextInputEditText-->
+        <!--android:id="@+id/et_email_sign_in"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:layout_marginTop="@dimen/margin_20">-->
+        <!--style="@style/edit_text_style"-->
+        <!--android:inputType="textEmailAddress"-->
+        <!--android:hint="@string/emaiil"-->
 
-        <!--<RadioButton-->
-            <!--android:id="@+id/rb_remember_sign_in"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:checked="true"-->
-            <!--android:text="@string/remember"/>-->
+        <!--/>-->
 
-        <!--<TextView-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:gravity="center"-->
-            <!--android:text="@string/forgot_password"/>-->
+        <EditText
+            android:id="@+id/et_email_sign_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/edit_text_style"
+            android:inputType="textEmailAddress"
+            android:hint="@string/emaiil"
+            />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:passwordToggleEnabled="true">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/et_password_sign_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            style="@style/edit_text_style"
+            android:hint="@string/password"
+        />
+    </android.support.design.widget.TextInputLayout>
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:layout_marginTop="@dimen/margin_20">-->
+
+    <TextView
+        android:id="@+id/tv_sign_in_forgot_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:clickable="true"
+        android:layout_marginTop="@dimen/all_padding"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/normal_text_size"
+        android:text="@string/forgot_password"/>
+
+    <!--<RadioButton-->
+    <!--android:id="@+id/rb_remember_sign_in"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:checked="true"-->
+    <!--android:text="@string/remember"/>-->
+
 
     <!--</LinearLayout>-->
 

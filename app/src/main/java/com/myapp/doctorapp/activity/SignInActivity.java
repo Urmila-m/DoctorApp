@@ -2,7 +2,9 @@ package com.myapp.doctorapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,7 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.myapp.doctorapp.R;
@@ -41,11 +45,12 @@ import static com.myapp.doctorapp.Globals.addUserToPreference;
 public class SignInActivity extends PreferenceInitializingActivity implements View.OnClickListener, OnDataRetrievedListener {
 
     TextView tvCreateAccount;
+    TextView tvForgotPassword;
     Button btnManualSignIn;
     ImageView signInFb;
     EditText etEmail;
-    EditText etPassword;
-    String email, password;
+    TextInputEditText etPassword;
+    String email, password, email2;
     String activeId;
     User user2;
 
@@ -62,6 +67,7 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
         if (firebaseUser!=null ){
             Log.e("TAG", "onCreate: User not null"+firebaseUser.getEmail());
             firebaseUser.reload()
+                    //isEmailVerified() returns false even after it is clicked if not reloaded
             .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -73,12 +79,43 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
                     }
                 }
             });
-//            if (firebaseUser.isEmailVerified()) {
-//                Log.e("TAG", "onCreate: "+firebaseUser.getEmail());
-//                apiTask.verifyUser(firebaseUser.getEmail(), this);
-//                FirebaseAuth.getInstance().signOut();
-//            }
         }
+
+//        Intent intent=getIntent();
+//        if (intent.getStringExtra("email")!=null){
+//            Log.e("TAG", "onCreate: intent not empty");
+//            email2=intent.getStringExtra("email");
+//            editor.putString("email2", "").commit();
+//            FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+//                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Void> task) {
+//                            if (task.isSuccessful()) {
+//                                Toast.makeText(SignInActivity.this, "Password reset link has been sent to the email", Toast.LENGTH_SHORT).show();
+//                            }
+//                            else {
+//                                Log.e("TAG", "onComplete: email with password reset link sending failed!!");
+//                            }
+//                        }
+//                    });
+//        }
+
+//        if (preferences.getString("email2", "")!="") {//TODO dont know how to do.will need dynamic links
+//            FirebaseAuth.getInstance().verifyPasswordResetCode(preferences.getString("email2", ""))
+//                    .addOnCompleteListener(new OnCompleteListener<String>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<String> task) {
+//                            if (task.isSuccessful()) {
+//                                Log.e("TAG", "onComplete: Verified");
+//                                editor.remove("email2").commit();
+//                            }
+//                        }
+//                    });
+//        }
+
+//        FirebaseAuth.getInstance().confirmPasswordReset();
+
+
 
         AccessToken accessToken=AccessToken.getCurrentAccessToken();
         boolean isLogin=accessToken!=null&&!accessToken.isExpired();
@@ -99,13 +136,17 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
         signInFb=findViewById(R.id.iv_sign_in_fb);
         etEmail=findViewById(R.id.et_email_sign_in);
         etPassword=findViewById(R.id.et_password_sign_in);
+        tvForgotPassword=findViewById(R.id.tv_sign_in_forgot_password);
 
         tvCreateAccount.setOnClickListener(this);
         btnManualSignIn.setOnClickListener(this);
         signInFb.setOnClickListener(this);
+        tvForgotPassword.setOnClickListener(this);
 
         checkFbRegistrationTask=new CheckFbRegistrationTask(this);
     }
+
+
 
     @Override
     public void onClick(View v) {
@@ -127,6 +168,10 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
             Log.e("TAG", "onClick: sign in with fb clicked");
             checkFbRegistrationTask.registerFbCallback();
 
+        }
+        else if (v==tvForgotPassword){
+            Intent intent=new Intent(SignInActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent);
         }
     }
 

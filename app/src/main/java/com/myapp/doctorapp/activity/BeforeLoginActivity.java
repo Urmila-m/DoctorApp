@@ -64,7 +64,6 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 firebaseAuth.signInWithEmailAndPassword(user.getEmail(), user.getPassword());
-                                //Todo isEmailVerified returns false even when link clicked
                                 Toast.makeText(BeforeLoginActivity.this, "Email registered successfully", Toast.LENGTH_SHORT).show();
                                 firebaseAuth.getCurrentUser().sendEmailVerification()
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -76,13 +75,6 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
                                             }
                                         });
 
-//                                if (firebaseAuth.getCurrentUser().isEmailVerified()) {//TODO milaunu parxa
-//                                    addUserToPreference(editor, user);
-//                                    apiTask.verifyUser(user.getEmail(), BeforeLoginActivity.this);
-//                                    startActivity(new Intent(BeforeLoginActivity.this, AfterLoginActivity.class));
-//                                }
-//                                else
-//                                    startActivity(new Intent(BeforeLoginActivity.this, SignInActivity.class));
                             }
 
                             else {
