@@ -2,6 +2,7 @@ package com.myapp.doctorapp.activity;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -22,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,7 @@ import com.myapp.doctorapp.fragments.FindDoctorFragment;
 import com.myapp.doctorapp.fragments.HomeFragment;
 import com.myapp.doctorapp.fragments.MyAppointmentFragment;
 import com.myapp.doctorapp.fragments.MyMedicineFragment;
+import com.myapp.doctorapp.fragments.MyPhotosFragment;
 import com.myapp.doctorapp.fragments.ProfileFragment;
 import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
@@ -57,6 +60,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static com.myapp.doctorapp.Globals.ALERT_POP_UP;
 import static com.myapp.doctorapp.Globals.API_GET_DOCTOR_LIST;
 import static com.myapp.doctorapp.Globals.API_UPDATE_PROFILE;
+import static com.myapp.doctorapp.Globals.GET_ALL_IMAGES;
 import static com.myapp.doctorapp.Globals.GET_APPOINT_DETAILS;
 import static com.myapp.doctorapp.Globals.GET_MY_MEDICINE;
 import static com.myapp.doctorapp.Globals.INSERT_MEDICINE;
@@ -75,12 +79,13 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
     Bundle timeAndDate;
     AlarmManager alarmManager;
     List<PendingIntent> listOfPI, medicineListOfPI;
+    ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_login);
-
+        dialog=new ProgressDialog(this);
         Log.e("TAG", "onCreate: testing the code after thread" );
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -146,7 +151,6 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO load image upload activity
                 startActivity(new Intent(AfterLoginActivity.this, VolleyImageUploadActivity.class));
             }
         });
@@ -206,7 +210,12 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         } else if (id == R.id.nav_log_out) {
             logOut();
 
-        } else if (id==R.id.nav_change_password){
+        }
+        else if (id==R.id.nav_my_photos){
+            dialog.show();
+            apiTask.getAllImages(preferences.getString("email", ""), this);
+       }
+        else if (id==R.id.nav_change_password){
            if (preferences.getString("password", "").equals("")){
                Toast.makeText(this, "You signed up using facebook. No password required!!", Toast.LENGTH_SHORT).show();
 
@@ -359,7 +368,6 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
 
         else if (source.equals(GET_MY_MEDICINE)){
             MyMedicineFragment fragment=new MyMedicineFragment();
-//            List<MedicineDetails> list= (List<MedicineDetails>) bundle.getSerializable("medicineList");
             fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).commit();
         }
@@ -367,6 +375,14 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         else if (source.equals(RESET_PASSWORD)){
             PostResponse response= (PostResponse) bundle.getSerializable("response");
             Log.e("TAG", "onDataRetrieved: "+response.getErrorMsg());
+        }
+
+        else if (source.equals(GET_ALL_IMAGES)){
+            MyPhotosFragment fragment=new MyPhotosFragment();
+            fragment.setArguments(bundle);
+            dialog.dismiss();
+            getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).commit();
+
         }
     }
 

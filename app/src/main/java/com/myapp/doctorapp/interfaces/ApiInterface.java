@@ -6,6 +6,7 @@ import com.myapp.doctorapp.model.AppointmentDetail;
 import com.myapp.doctorapp.model.Doctor;
 import com.myapp.doctorapp.model.EmailPasswordResponse;
 import com.myapp.doctorapp.model.IdModel;
+import com.myapp.doctorapp.model.ImageUrlModel;
 import com.myapp.doctorapp.model.MedicineDetails;
 import com.myapp.doctorapp.model.PostResponse;
 import com.myapp.doctorapp.model.User;
@@ -111,6 +112,11 @@ public interface ApiInterface {
     Call<PostResponse> resetPassword(@Field("action") String resetPassword,
                                      @Field("patientEmail") String Email,
                                      @Field("newPassword") String newPassword);
+
+    @POST("uploadImage.php")
+    @FormUrlEncoded
+    Call<List<ImageUrlModel>> getAllImages(@Field("action") String getAllImages,
+                                     @Field("email") String email);
 
 }
 

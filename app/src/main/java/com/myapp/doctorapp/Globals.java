@@ -26,6 +26,7 @@ public class Globals extends Application {
     public static final String VERIFY_USER="VerifyUser";
     public static final String CHECK_VERIFICATION="CheckVerification";
     public static final String RESET_PASSWORD="ResetPassword";
+    public static final String GET_ALL_IMAGES="GetAllImages";
 
     public boolean isValidEmail(String email){
         return(!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());

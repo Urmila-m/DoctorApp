@@ -9,6 +9,7 @@ import com.myapp.doctorapp.model.AppointmentDetail;
 import com.myapp.doctorapp.model.Doctor;
 import com.myapp.doctorapp.model.EmailPasswordResponse;
 import com.myapp.doctorapp.model.IdModel;
+import com.myapp.doctorapp.model.ImageUrlModel;
 import com.myapp.doctorapp.model.MedicineDetails;
 import com.myapp.doctorapp.model.PostResponse;
 import com.myapp.doctorapp.model.User;
@@ -29,6 +30,7 @@ import static com.myapp.doctorapp.Globals.API_GET_USER;
 import static com.myapp.doctorapp.Globals.API_INSERT;
 import static com.myapp.doctorapp.Globals.API_UPDATE_PROFILE;
 import static com.myapp.doctorapp.Globals.CHECK_VERIFICATION;
+import static com.myapp.doctorapp.Globals.GET_ALL_IMAGES;
 import static com.myapp.doctorapp.Globals.GET_APPOINT_DETAILS;
 import static com.myapp.doctorapp.Globals.GET_MY_MEDICINE;
 import static com.myapp.doctorapp.Globals.GET_USER_USING_ID;
@@ -345,6 +347,27 @@ public class ApiBackgroundTask {
                     Log.e("TAG", "onFailure: "+t.getMessage());
                 }
             });
+        }
+    }
+
+    public void getAllImages(String email, final OnDataRetrievedListener listener){
+        if (listener!=null){
+            apiInterface.getAllImages("getAllImages", email)
+                   .enqueue(new Callback<List<ImageUrlModel>>() {
+                       @Override
+                       public void onResponse(Call<List<ImageUrlModel>> call, Response<List<ImageUrlModel>> response) {
+                           Bundle b=new Bundle();
+                           b.putSerializable("listOfAllImageUrl", (Serializable) response.body());
+                           listener.onDataRetrieved(GET_ALL_IMAGES, b);
+                       }
+
+                       @Override
+                       public void onFailure(Call<List<ImageUrlModel>> call, Throwable t) {
+                           Log.e("TAG", "onFailure: "+t.getMessage());
+                           t.printStackTrace();
+                       }
+                   });
+
         }
     }
 }
