@@ -5,7 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.icu.util.Calendar;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,8 +18,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -38,7 +43,13 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.security.Permissions;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -52,7 +63,7 @@ public class VolleyImageUploadActivity extends PreferenceInitializingActivity im
     Bitmap imageSelected;
     String image;
     String SERVER_URL="http://192.168.1.72/uploadImage.php";
-    ProgressDialog dialog;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +75,7 @@ public class VolleyImageUploadActivity extends PreferenceInitializingActivity im
         btnChoose=findViewById(R.id.btn_choose_image);
         btnUpload=findViewById(R.id.btn_upload_image);
         textInputLayout=findViewById(R.id.til_image_upload);
+        progressBar=findViewById(R.id.pb_upload_image);
 
         String image=preferences.getString("image", "");
         Picasso.get().load(image)
@@ -77,7 +89,7 @@ public class VolleyImageUploadActivity extends PreferenceInitializingActivity im
     public void onClick(View v) {
         if (v==btnChoose){
             if (ActivityCompat.checkSelfPermission(VolleyImageUploadActivity.this,  Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(VolleyImageUploadActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                ActivityCompat.requestPermissions(VolleyImageUploadActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             }
 
             if (ActivityCompat.checkSelfPermission(VolleyImageUploadActivity.this,  Manifest.permission.READ_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED){
@@ -96,20 +108,19 @@ public class VolleyImageUploadActivity extends PreferenceInitializingActivity im
             }
             if (textInputLayout.getError()==null){
                 if (imageSelected!=null){
-                    Log.e("TAG", "onClick: espaxi uploadImage() call");
+                    progressBar.setVisibility(View.VISIBLE);
                     image=bitmapToString(imageSelected);
-                    dialog=new ProgressDialog(this);
-                    dialog.show();
                     uploadImage();
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED){
+                        Log.e("TAG", "onClick: permisison granted now write");
+                        writeToExternalStorage(imageSelected, enterImageName.getText().toString());
+                    }
+                    else {
+                        Log.e("TAG", "onClick: write permission not granted");
+                    }
                 }
             }
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.e("TAG", "onRequestPermissionsResult: "+requestCode+" "+permissions[0]+" "+grantResults[0] );
     }
 
     @Override
@@ -165,15 +176,14 @@ public class VolleyImageUploadActivity extends PreferenceInitializingActivity im
     }
 
     private void uploadImage(){
-//        Log.e("TAG", "uploadImage: ", );
         StringRequest request=new StringRequest(Request.Method.POST, SERVER_URL,//StringRequest class from Volley
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Log.e("TAG", "onResponse: "+response);
-                        dialog.dismiss();
+                        progressBar.setVisibility(View.GONE);
                         Toast.makeText(VolleyImageUploadActivity.this, "uploaded successfully!", Toast.LENGTH_LONG).show();
-                        //TODO get all the images and show them. Table aafai create garnuparyo, with emailNam
+                        //TODO get all the images and show them. Table aafai create garnuparyo, with emailNam, naming image
 
                     }
                 }, new Response.ErrorListener() {
@@ -186,9 +196,15 @@ public class VolleyImageUploadActivity extends PreferenceInitializingActivity im
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> stringMap=new HashMap<> ();
+                Calendar c=Calendar.getInstance();
+                int year=c.get(Calendar.YEAR);
+                int month=c.get(Calendar.MONTH)+1;
+                int day=c.get(Calendar.DAY_OF_MONTH);
+                String today= String.format("%02d", month)+"/"+String.format("%02d", day)+"/"+String.format("%04d", year);
                 stringMap.put("image", image);
                 stringMap.put("email", preferences.getString("email", ""));
                 stringMap.put("action", "uploadImage");
+                stringMap.put("today", today);
                 return stringMap;
 
             }
@@ -198,5 +214,28 @@ public class VolleyImageUploadActivity extends PreferenceInitializingActivity im
         task.addToRequestQueue(request);
     }
 
+    private void writeToExternalStorage(Bitmap bitmap, String title){
+        File file=new File(Environment.getExternalStorageDirectory().getPath(), "DoctorApp");
+        if (!file.exists()){
+            Log.e("TAG", "writeToExternalStorage: file doesnt exist" );
+            file.mkdir();
+        }
+        if (file.exists()) {
+            Log.e("TAG", "writeToExternalStorage: imageInsertion");
+            File exactImageLocation=new File(file, title+".png");
+            try {
+                OutputStream outputStream=new FileOutputStream(exactImageLocation);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 }
