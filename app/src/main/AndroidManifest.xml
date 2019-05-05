@@ -14,7 +14,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MyPhotosActivity"></activity>
         <activity android:name=".activity.VolleyImageUploadActivity" />
         <activity android:name=".activity.DynamicLinkActivity">
             <intent-filter tools:ignore="AppLinkUrlError">

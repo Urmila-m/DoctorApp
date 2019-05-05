@@ -35,6 +35,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.JsonObject;
+import com.google.zxing.common.StringUtils;
 import com.myapp.doctorapp.R;
 import com.myapp.doctorapp.backgroundtasks.VolleyImageUploadTask;
 import com.myapp.doctorapp.model.PostResponse;
@@ -113,7 +114,7 @@ public class VolleyImageUploadActivity extends PreferenceInitializingActivity im
                     uploadImage();
                     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED){
                         Log.e("TAG", "onClick: permisison granted now write");
-                        writeToExternalStorage(imageSelected, enterImageName.getText().toString());
+                        writeToExternalStorage(imageSelected, getRequiredEmail(preferences.getString("email", ""))+getImageName());
                     }
                     else {
                         Log.e("TAG", "onClick: write permission not granted");
@@ -183,8 +184,7 @@ public class VolleyImageUploadActivity extends PreferenceInitializingActivity im
                         Log.e("TAG", "onResponse: "+response);
                         progressBar.setVisibility(View.GONE);
                         Toast.makeText(VolleyImageUploadActivity.this, "uploaded successfully!", Toast.LENGTH_LONG).show();
-                        //TODO get all the images and show them. Table aafai create garnuparyo, with emailNam, naming image
-
+                        startActivity(new Intent(VolleyImageUploadActivity.this, AfterLoginActivity.class));
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -196,15 +196,13 @@ public class VolleyImageUploadActivity extends PreferenceInitializingActivity im
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> stringMap=new HashMap<> ();
-                Calendar c=Calendar.getInstance();
-                int year=c.get(Calendar.YEAR);
-                int month=c.get(Calendar.MONTH)+1;
-                int day=c.get(Calendar.DAY_OF_MONTH);
-                String today= String.format("%02d", month)+"/"+String.format("%02d", day)+"/"+String.format("%04d", year);
+                String email=preferences.getString("email", "");
                 stringMap.put("image", image);
-                stringMap.put("email", preferences.getString("email", ""));
+                stringMap.put("email", email);
                 stringMap.put("action", "uploadImage");
-                stringMap.put("today", today);
+                stringMap.put("today", getDate());
+                stringMap.put("imageName", getImageName());
+                stringMap.put("requiredEmail", getRequiredEmail(email));
                 return stringMap;
 
             }
@@ -237,5 +235,27 @@ public class VolleyImageUploadActivity extends PreferenceInitializingActivity im
             }
         }
 
+    }
+
+    private String getRequiredEmail(String email){
+        String emailRequired=email.split("@")[0];//string before '@' from email
+        //emailRequired=email.substring(0, email.indexOf('@'));
+        return emailRequired;
+    }
+    private String getImageName(){
+        Calendar c=Calendar.getInstance();
+        long msec=c.getTimeInMillis();
+        String strMsec=msec+"";
+//        String last4milsec=strMsec.substring(strMsec.length()-4);//filters the last 4 digits of the current time in milliseconds
+        return strMsec;
+    }
+
+    private String getDate(){
+        Calendar c=Calendar.getInstance();
+        int year=c.get(Calendar.YEAR);
+        int month=c.get(Calendar.MONTH)+1;
+        int day=c.get(Calendar.DAY_OF_MONTH);
+        String today= String.format("%02d", month)+"/"+String.format("%02d", day)+"/"+String.format("%04d", year);
+        return  today;
     }
 }
