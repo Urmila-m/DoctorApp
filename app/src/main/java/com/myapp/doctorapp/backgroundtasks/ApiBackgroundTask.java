@@ -227,9 +227,9 @@ public class ApiBackgroundTask {
         }
     }
 
-    public void getAppointmentDetails(String patient, final OnDataRetrievedListener listener){
+    public void getAppointmentDetails(String patientEmail, final OnDataRetrievedListener listener){
         if (listener!=null) {
-            apiInterface.getAppointmentDetails("getAppDetails", patient)
+            apiInterface.getAppointmentDetails("getAppDetails", patientEmail)
                     .enqueue(new Callback<List<AppointmentDetail>>() {
                         @Override
                         public void onResponse(Call<List<AppointmentDetail>> call, Response<List<AppointmentDetail>> response) {

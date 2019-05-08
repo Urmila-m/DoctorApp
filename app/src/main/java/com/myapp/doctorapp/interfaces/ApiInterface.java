@@ -78,7 +78,7 @@ public interface ApiInterface {
     @POST("doctorAppAPI.php")
     @FormUrlEncoded
     Call<List<AppointmentDetail>> getAppointmentDetails(@Field("action") String getAppDetails,
-                                                        @Field("patientName") String patient);
+                                                        @Field("patientEmail") String patientEmail);
 
     @POST("doctorAppAPI.php")
     @FormUrlEncoded

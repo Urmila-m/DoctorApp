@@ -88,6 +88,7 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_login);
 
+        Log.e("TAG", "onCreate: " );
         utils=new NetworkUtils();
         dialog=new ProgressDialog(this);
 
@@ -105,7 +106,7 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
 
         apiTask=new ApiBackgroundTask();
 
-        apiTask.getAppointmentDetails(preferences.getString("name", ""), new OnDataRetrievedListener() {
+        apiTask.getAppointmentDetails(preferences.getString("email", ""), new OnDataRetrievedListener() {
             @Override
             public void onDataRetrieved(String source, Bundle bundle) {
                 List<AppointmentDetail> list = (List<AppointmentDetail>) bundle.getSerializable("DetailList");
@@ -120,7 +121,7 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
 
         Intent intent=getIntent();
         if (intent.getExtras()!=null){
-            MedicineDetails details=new MedicineDetails(preferences.getString("name", ""), intent.getStringExtra("doctor"),
+            MedicineDetails details=new MedicineDetails(preferences.getString("email", ""), intent.getStringExtra("doctor"),
                     intent.getStringExtra("time"), intent.getStringExtra("medicine"), intent.getBooleanExtra("day", false),
                     intent.getBooleanExtra("morning", false), intent.getBooleanExtra("night", false),
                     intent.getFloatExtra("rating", 0));
@@ -130,7 +131,7 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         }
 
         timeAndDate=new Bundle();
-        timeAndDate.putString("patient", preferences.getString("name", ""));
+        timeAndDate.putString("patient", preferences.getString("email", ""));
 
         View view=findViewById(R.id.dl_content);
         View view1=view.findViewById(R.id.include_after_login);
@@ -157,6 +158,12 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
                 startActivity(new Intent(AfterLoginActivity.this, VolleyImageUploadActivity.class));
             }
         });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
     }
 
@@ -209,7 +216,7 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         } else if (id == R.id.nav_appointment) {
            Log.e("TAG", "onNavigationItemSelected: "+preferences.getString("name", ""));
            if (utils.isNetworkConnected(this)) {
-               apiTask.getAppointmentDetails(preferences.getString("name", ""), this);
+               apiTask.getAppointmentDetails(preferences.getString("email", ""), this);
            }
            else {
                Toast.makeText(this, "No internet connection!!", Toast.LENGTH_LONG).show();
@@ -252,7 +259,7 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         }
 
         else if(id==R.id.home_appointment){
-            apiTask.getAppointmentDetails(preferences.getString("name", ""), this);
+            apiTask.getAppointmentDetails(preferences.getString("email", ""), this);
         }
         else if (id==R.id.btn_edit_profile){
             Bundle previousValues=new Bundle();
@@ -310,7 +317,7 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         }
 
         else if (id==R.id.my_medicine_block){
-            apiTask.getMyMedicine(preferences.getString("name", ""), this);
+                apiTask.getMyMedicine(preferences.getString("email", ""), this);
         }
 
         else if (id==R.id.btn_change_password_save){
@@ -354,8 +361,6 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
             PostResponse response= (PostResponse) bundle.getSerializable("response");
             Log.e("TAG", "onDataRetrieved: "+response.getErrorMsg() );
             if (response.isSuccess()){
-                Log.e("TAG", "onDataRetrieved: appointment set");
-                //TODO if today ho vaye pending intent ma add garne
                 Intent intent=new Intent(AfterLoginActivity.this, AfterLoginActivity.class);//restarting the activity
                 startActivity(intent);
                 finish();
@@ -483,7 +488,7 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
         else if (decisionParam.equals("medicine")){
             for (int i = 0; i < appointDateList.size(); i++) {
 //                alarmManager.setExact(AlarmManager.RTC_WAKEUP, appointDateList.get(i).getTimeInMillis()+10800000, listOfPI.get(i));
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, appointDateList.get(i).getTimeInMillis()+180000, listOfPI.get(i));
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, appointDateList.get(i).getTimeInMillis()+60000, listOfPI.get(i));
             }
         }
     }
