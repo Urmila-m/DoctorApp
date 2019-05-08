@@ -19,6 +19,16 @@ public class AppointmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     List<AppointmentDetail> detail;
     Context context;
 
+    @Override
+    public int getItemViewType(int position) {
+        if (detail.size()==0){
+            return 2;
+        }
+        else {
+            return 1;
+        }
+    }
+
     public AppointmentAdapter(Context context, List<AppointmentDetail> detail) {
         this.detail = detail;
         this.context= context;
@@ -27,20 +37,38 @@ public class AppointmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view=LayoutInflater.from(context).inflate(R.layout.appointment_detail_recycle_view_layout, viewGroup, false);
-        return (new MyAppointmentViewHolder(view));
+        RecyclerView.ViewHolder holder=null;
+        if (i == 1) {
+            View view = LayoutInflater.from(context).inflate(R.layout.appointment_detail_recycle_view_layout, viewGroup, false);
+            holder=new MyAppointmentViewHolder(view);
+        }
+        else if (i==2){
+            View view = LayoutInflater.from(context).inflate(R.layout.activity_dynamic_link, viewGroup, false);
+            holder=new MedicineAdapter.EmptyViewHolder(view);
+        }
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-        MyAppointmentViewHolder h= (MyAppointmentViewHolder) viewHolder;
-        h.doctor.setText(detail.get(i).getDoctor());
-        h.date.setText(detail.get(i).getAppointment_date());
+        if (viewHolder instanceof MyAppointmentViewHolder) {
+            MyAppointmentViewHolder h = (MyAppointmentViewHolder) viewHolder;
+            h.doctor.setText(detail.get(i).getDoctor());
+            h.date.setText(detail.get(i).getAppointment_date());
+        }
+        else {
+            MedicineAdapter.EmptyViewHolder h= (MedicineAdapter.EmptyViewHolder) viewHolder;
+            h.getTextView().setText("No Appointment records yet");
+        }
     }
 
     @Override
     public int getItemCount() {
-        return detail.size();
+        if (detail.size() == 0) {
+            return 1;
+        } else {
+            return detail.size();
+        }
     }
 
     private class MyAppointmentViewHolder extends RecyclerView.ViewHolder{

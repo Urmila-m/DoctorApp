@@ -9,7 +9,9 @@
     <TextView
         android:id="@+id/tv_dynamic_link"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints" />
+        android:layout_height="match_parent"
+        tools:ignore="MissingConstraints"
+        android:textSize="@dimen/normal_text_size"
+        android:gravity="center"/>
 
 </android.support.constraint.ConstraintLayout>

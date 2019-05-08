@@ -22,6 +22,7 @@ import com.myapp.doctorapp.fragments.DatePickerFragment;
 import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
 import com.myapp.doctorapp.model.Doctor;
+import com.myapp.doctorapp.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
@@ -37,10 +38,12 @@ public class DoctorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     OnFragmentButtonClickListener listener;
     List<Doctor> list;
     Context context;
+    NetworkUtils utils;
 
     public DoctorAdapter(List<Doctor> list, Context context) {
         this.list = list;
         this.context = context;
+        utils=new NetworkUtils();
         if (context instanceof OnFragmentButtonClickListener){
             listener= (OnFragmentButtonClickListener) context;
         }
@@ -115,13 +118,17 @@ public class DoctorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 bookAppointment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Bundle bundle=new Bundle();
-                        bundle.putString("doctorName", doctor.getName());
-                        bundle.putString("doctorFee", Integer.toString(doctor.getFee()));
-                        Toast.makeText(context, "book button clicked", Toast.LENGTH_SHORT).show();
-                        listener.onButtonClicked(R.id.btn_book_appointment_doctor_info, new DatePickerFragment(), bundle);
-                        //TODO service start garne for reminder
-                        alertDialog.dismiss();
+                        if (utils.isNetworkConnected(context)) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("doctorName", doctor.getName());
+                            bundle.putString("doctorFee", Integer.toString(doctor.getFee()));
+                            Toast.makeText(context, "book button clicked", Toast.LENGTH_SHORT).show();
+                            listener.onButtonClicked(R.id.btn_book_appointment_doctor_info, new DatePickerFragment(), bundle);
+                            alertDialog.dismiss();
+                        }
+                        else {
+                            Toast.makeText(context, "No internet connection!!", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
 

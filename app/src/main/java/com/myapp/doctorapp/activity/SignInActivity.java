@@ -1,5 +1,6 @@
 package com.myapp.doctorapp.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,6 +30,7 @@ import com.myapp.doctorapp.model.PostResponse;
 import com.myapp.doctorapp.model.User;
 import com.myapp.doctorapp.model.VerificationResponse;
 import com.myapp.doctorapp.services.NotificationService;
+import com.myapp.doctorapp.utils.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +55,8 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
     String email, password, email2;
     String activeId;
     User user2;
+    ProgressDialog dialog;
+    NetworkUtils utils;
 
     ApiBackgroundTask apiTask;
     CheckFbRegistrationTask checkFbRegistrationTask;
@@ -63,6 +67,8 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
         setContentView(R.layout.sign_in_layout);
 
         apiTask=new ApiBackgroundTask();
+        utils=new NetworkUtils();
+        dialog=new ProgressDialog(this);
         FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser!=null ){
             Log.e("TAG", "onCreate: User not null"+firebaseUser.getEmail());
@@ -115,8 +121,6 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
 
 //        FirebaseAuth.getInstance().confirmPasswordReset();
 
-
-
         AccessToken accessToken=AccessToken.getCurrentAccessToken();
         boolean isLogin=accessToken!=null&&!accessToken.isExpired();
 
@@ -146,32 +150,35 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
         checkFbRegistrationTask=new CheckFbRegistrationTask(this);
     }
 
-
-
     @Override
     public void onClick(View v) {
-        if (v== tvCreateAccount){
-            startActivity(new Intent(SignInActivity.this, MainActivity.class));
-        }
-        else if(v==btnManualSignIn){
-            email=etEmail.getText().toString();
-            password=etPassword.getText().toString();
-            if (password.equals("")){
-                Log.e("TAG", "onButtonClicked: Fill the password!!");
-            }
-            else {
-                Log.e("TAG", "onButtonClicked: " + email);
-                apiTask.getEmailPassword(this);
-            }
-        }
-        else if(v==signInFb){
-            Log.e("TAG", "onClick: sign in with fb clicked");
-            checkFbRegistrationTask.registerFbCallback();
+        if (utils.isNetworkConnected(SignInActivity.this)) {
+            Log.e("TAG", "onClick: Network connected" );
+            if (v == tvCreateAccount) {
+                startActivity(new Intent(SignInActivity.this, MainActivity.class));
+            } else if (v == btnManualSignIn) {
+                email = etEmail.getText().toString();
+                password = etPassword.getText().toString();
+                if (password.equals("")) {
+                    Log.e("TAG", "onButtonClicked: Fill the password!!");
+                } else {
+                    Log.e("TAG", "onButtonClicked: " + email);
+                    dialog.setTitle("\t Signing in");
+                    dialog.show();
+                    apiTask.getEmailPassword(this);
+                }
+            } else if (v == signInFb) {
+                Log.e("TAG", "onClick: sign in with fb clicked");
+                checkFbRegistrationTask.registerFbCallback();
 
+            } else if (v == tvForgotPassword) {
+                Intent intent = new Intent(SignInActivity.this, ForgotPasswordActivity.class);
+                startActivity(intent);
+            }
         }
-        else if (v==tvForgotPassword){
-            Intent intent=new Intent(SignInActivity.this, ForgotPasswordActivity.class);
-            startActivity(intent);
+
+        else {
+            Toast.makeText(this, "No internet connection", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -219,6 +226,7 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
             for (IdModel id:idList
                  ) {
                 if (activeId.equals(id.getId())){
+                    dialog.show();
                     apiTask.getUserUsingId(activeId, this);
                     count++;
                     break;
@@ -232,6 +240,7 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
         else if (source.equals(GET_USER_USING_ID)){
             User user= (User) bundle.getSerializable("user");
             addUserToPreference(editor, user);
+            dialog.dismiss();
             startActivity(new Intent(SignInActivity.this, AfterLoginActivity.class));
             finish();
         }
@@ -241,6 +250,7 @@ public class SignInActivity extends PreferenceInitializingActivity implements Vi
             if (response.getVerified()==1){
                 addUserToPreference(editor, user2);
                 startActivity(new Intent(SignInActivity.this, AfterLoginActivity.class));
+                dialog.dismiss();
                 finish();
 
             }

@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.NumberPicker;
+import android.widget.Toast;
 
 import com.myapp.doctorapp.R;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
+import com.myapp.doctorapp.utils.NetworkUtils;
 
 public class EditProfileFragment extends Fragment implements View.OnClickListener {
 
@@ -23,6 +25,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
     private OnFragmentButtonClickListener listener;
     Bundle previousValues;
     String prevHeight, prevWeight, blood;
+    NetworkUtils utils;
 
     public EditProfileFragment() {
         // Required empty public constructor
@@ -35,6 +38,7 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
         prevHeight=previousValues.getString("height");
         prevWeight=previousValues.getString("weight");
         blood=previousValues.getString("blood");
+        utils=new NetworkUtils();
 
     }
 
@@ -94,18 +98,22 @@ public class EditProfileFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        int updatedWeight=weight.getValue();
-        int updatedHeight=height.getValue();
+        if(utils.isNetworkConnected(getContext())) {
+            int updatedWeight = weight.getValue();
+            int updatedHeight = height.getValue();
 
-        int intBlood=bloodGrp.getValue();
-        String updatedBlood=bloodGroup[intBlood-1];
+            int intBlood = bloodGrp.getValue();
+            String updatedBlood = bloodGroup[intBlood - 1];
 
-        Bundle bundle=new Bundle();
-        bundle.putString("blood", updatedBlood);
-        bundle.putString("height", updatedHeight+"");
-        bundle.putString("weight", updatedWeight+"");
+            Bundle bundle = new Bundle();
+            bundle.putString("blood", updatedBlood);
+            bundle.putString("height", updatedHeight + "");
+            bundle.putString("weight", updatedWeight + "");
 
-        listener.onButtonClicked(btnUpdate.getId(), new HomeFragment(), bundle);
-
+            listener.onButtonClicked(btnUpdate.getId(), new HomeFragment(), bundle);
+        }
+        else {
+            Toast.makeText(getContext(), "No internet connection!!", Toast.LENGTH_LONG).show();
+        }
     }
 }

@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.myapp.doctorapp.R;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
+import com.myapp.doctorapp.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -30,6 +32,13 @@ public class ProfileFragment  extends Fragment implements View.OnClickListener {
     CircleImageView imageView;
     Bundle bundle;
     Button btnEditProfile;
+    NetworkUtils utils;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        utils=new NetworkUtils();
+    }
 
     public ProfileFragment() {
         //required empty constructor
@@ -103,6 +112,11 @@ public class ProfileFragment  extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        listener.onButtonClicked(btnEditProfile.getId(), new EditProfileFragment(), new Bundle());
+        if (utils.isNetworkConnected(getContext())){
+            listener.onButtonClicked(btnEditProfile.getId(), new EditProfileFragment(), new Bundle());
+        }
+        else {
+            Toast.makeText(getContext(), "No internet Connection!!", Toast.LENGTH_LONG).show();
+        }
     }
 }

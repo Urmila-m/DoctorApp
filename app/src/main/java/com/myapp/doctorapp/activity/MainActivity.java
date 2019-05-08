@@ -7,12 +7,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.myapp.doctorapp.R;
 import com.myapp.doctorapp.backgroundtasks.ApiBackgroundTask;
 import com.myapp.doctorapp.backgroundtasks.SignUpWithFacebookTask;
 import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.model.User;
+import com.myapp.doctorapp.utils.NetworkUtils;
 
 import static com.myapp.doctorapp.Globals.API_INSERT;
 import static com.myapp.doctorapp.Globals.SIGNUP;
@@ -25,6 +27,7 @@ public class MainActivity extends PreferenceInitializingActivity implements View
     TextView tvSignUpEmailPhone;
     Button btnSignUp;
     ApiBackgroundTask apiTask;
+    NetworkUtils utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,8 @@ public class MainActivity extends PreferenceInitializingActivity implements View
 
             tvSignUpEmailPhone=findViewById(R.id.tv_sign_up_options_email_phone);
             btnSignUp = findViewById(R.id.btn_sign_up_options_fb);
+
+            utils=new NetworkUtils();
 
             tvSignUpEmailPhone.setOnClickListener(this);
             btnSignUp.setOnClickListener(this);
@@ -50,11 +55,14 @@ public class MainActivity extends PreferenceInitializingActivity implements View
 
     @Override
     public void onClick(View v) {
-        if (v==btnSignUp){
-            task.registerFbCallback();
-        }
-
-        else if(v==tvSignUpEmailPhone){
+        if (v == btnSignUp) {
+            if (utils.isNetworkConnected(this)) {
+                task.registerFbCallback();
+            }
+            else {
+                Toast.makeText(this, "No internet Connection", Toast.LENGTH_LONG).show();
+            }
+        } else if (v == tvSignUpEmailPhone) {
             startActivity(new Intent(MainActivity.this, BeforeLoginActivity.class));
         }
     }

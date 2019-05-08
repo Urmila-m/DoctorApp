@@ -21,28 +21,56 @@ public class MedicineAdapter extends RecyclerView.Adapter {
     public MedicineAdapter(List<MedicineDetails> medicineList, Context context) {
         this.medicineList = medicineList;
         this.context = context;
-//        Log.e("TAG", "MedicineAdapter: constructor");
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (medicineList.size()==0){
+            return 2;
+        }
+        else {
+            return 1;
+        }
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view= LayoutInflater.from(context).inflate(R.layout.medicine_list_adapter_layout, viewGroup, false);
-        MedicineViewHolder h=new MedicineViewHolder(view);
+        RecyclerView.ViewHolder h = null;
+        if (i==1) {
+            View view = LayoutInflater.from(context).inflate(R.layout.medicine_list_adapter_layout, viewGroup, false);
+            h = new MedicineViewHolder(view);
+        }
+        else if (i==2){
+            View view=LayoutInflater.from(context).inflate(R.layout.activity_dynamic_link, viewGroup, false);
+            h=new EmptyViewHolder(view);
+        }
         return h;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-        MedicineViewHolder h= (MedicineViewHolder) viewHolder;
-        h.tvDoctor.setText(medicineList.get(i).getDoctor());
-        h.tvMedicine.setText(medicineList.get(i).getMedicine());
+        if (viewHolder instanceof MedicineViewHolder) {
+            Log.e("TAG", "onBindViewHolder: i=1");
+            MedicineViewHolder h = (MedicineViewHolder) viewHolder;
+            h.tvDoctor.setText(medicineList.get(i).getDoctor());
+            h.tvMedicine.setText(medicineList.get(i).getMedicine());
+        }
+        else if (viewHolder instanceof EmptyViewHolder){
+            Log.e("TAG", "onBindViewHolder: i=2");
+            EmptyViewHolder h= (EmptyViewHolder) viewHolder;
+            h.textView.setText("No medicine records yet");
+        }
     }
 
     @Override
     public int getItemCount() {
-//        Log.e("TAG", "getItemCount: adapter");
-        return medicineList.size();
+        if (medicineList.size()==0){
+            return 1;
+        }
+        else {
+            return medicineList.size();
+        }
     }
 
     class MedicineViewHolder extends RecyclerView.ViewHolder{
@@ -52,6 +80,19 @@ public class MedicineAdapter extends RecyclerView.Adapter {
             super(itemView);
             tvMedicine=itemView.findViewById(R.id.tv_list_medicine);
             tvDoctor=itemView.findViewById(R.id.tv_list_doctor);
+        }
+    }
+
+    public static class EmptyViewHolder extends RecyclerView.ViewHolder{
+        private TextView textView;
+
+        public EmptyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            this.textView = itemView.findViewById(R.id.tv_dynamic_link);
+        }
+
+        public TextView getTextView() {
+            return textView;
         }
     }
 }

@@ -45,6 +45,7 @@ import com.myapp.doctorapp.model.AppointmentDetail;
 import com.myapp.doctorapp.model.MedicineDetails;
 import com.myapp.doctorapp.model.PostResponse;
 import com.myapp.doctorapp.services.NotificationService;
+import com.myapp.doctorapp.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
@@ -80,13 +81,15 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
     AlarmManager alarmManager;
     List<PendingIntent> listOfPI, medicineListOfPI;
     ProgressDialog dialog;
+    NetworkUtils utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_login);
+
+        utils=new NetworkUtils();
         dialog=new ProgressDialog(this);
-        Log.e("TAG", "onCreate: testing the code after thread" );
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -205,28 +208,36 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
 
         } else if (id == R.id.nav_appointment) {
            Log.e("TAG", "onNavigationItemSelected: "+preferences.getString("name", ""));
-           apiTask.getAppointmentDetails(preferences.getString("name", ""), this);
-
+           if (utils.isNetworkConnected(this)) {
+               apiTask.getAppointmentDetails(preferences.getString("name", ""), this);
+           }
+           else {
+               Toast.makeText(this, "No internet connection!!", Toast.LENGTH_LONG).show();
+           }
         } else if (id == R.id.nav_log_out) {
             logOut();
 
         }
         else if (id==R.id.nav_my_photos){
-            dialog.show();
-            apiTask.getAllImages(preferences.getString("email", ""), this);
-       }
-        else if (id==R.id.nav_change_password){
-           if (preferences.getString("password", "").equals("")){
-               Toast.makeText(this, "You signed up using facebook. No password required!!", Toast.LENGTH_SHORT).show();
-
+           if (utils.isNetworkConnected(this)) {
+               dialog.show();
+               apiTask.getAllImages(preferences.getString("email", ""), this);
            }
            else {
-               Fragment fragment = new ChangePasswordFragment();
-               Bundle b = new Bundle();
-               b.putString("currentPassword", preferences.getString("password", ""));
-               fragment.setArguments(b);
-               getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).addToBackStack(null).commit();
+               Toast.makeText(this, "No internet connection!!", Toast.LENGTH_LONG).show();
            }
+       }
+        else if (id==R.id.nav_change_password){
+            if (preferences.getString("password", "").equals("")) {
+                Toast.makeText(this, "You signed up using facebook. No password required!!", Toast.LENGTH_SHORT).show();
+
+            } else {
+                Fragment fragment = new ChangePasswordFragment();
+                Bundle b = new Bundle();
+                b.putString("currentPassword", preferences.getString("password", ""));
+                fragment.setArguments(b);
+                getSupportFragmentManager().beginTransaction().add(frameLayout.getId(), fragment).addToBackStack(null).commit();
+            }
        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -345,6 +356,9 @@ public class AfterLoginActivity extends PreferenceInitializingActivity
             if (response.isSuccess()){
                 Log.e("TAG", "onDataRetrieved: appointment set");
                 //TODO if today ho vaye pending intent ma add garne
+                Intent intent=new Intent(AfterLoginActivity.this, AfterLoginActivity.class);//restarting the activity
+                startActivity(intent);
+                finish();
                 Toast.makeText(this, "appointment set", Toast.LENGTH_SHORT).show();
             }
             else {

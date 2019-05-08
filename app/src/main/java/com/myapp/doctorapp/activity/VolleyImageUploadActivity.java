@@ -39,6 +39,7 @@ import com.google.zxing.common.StringUtils;
 import com.myapp.doctorapp.R;
 import com.myapp.doctorapp.backgroundtasks.VolleyImageUploadTask;
 import com.myapp.doctorapp.model.PostResponse;
+import com.myapp.doctorapp.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -55,6 +56,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static com.myapp.doctorapp.Globals.LOCAL_SERVER_IP;
+
 public class VolleyImageUploadActivity extends PreferenceInitializingActivity implements View.OnClickListener {
 
     ImageView imageView;
@@ -63,8 +66,9 @@ public class VolleyImageUploadActivity extends PreferenceInitializingActivity im
     Button btnChoose, btnUpload;
     Bitmap imageSelected;
     String image;
-    String SERVER_URL="http://192.168.1.72/uploadImage.php";
+    String SERVER_URL="http://"+LOCAL_SERVER_IP+"/uploadImage.php";
     ProgressBar progressBar;
+    NetworkUtils utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +81,8 @@ public class VolleyImageUploadActivity extends PreferenceInitializingActivity im
         btnUpload=findViewById(R.id.btn_upload_image);
         textInputLayout=findViewById(R.id.til_image_upload);
         progressBar=findViewById(R.id.pb_upload_image);
+
+        utils=new NetworkUtils();
 
         String image=preferences.getString("image", "");
         Picasso.get().load(image)
@@ -101,25 +107,23 @@ public class VolleyImageUploadActivity extends PreferenceInitializingActivity im
             }
         }
         else if (v==btnUpload){
-            if (enterImageName.getText().toString().equals("")){
-                textInputLayout.setError("name cannot be empty");
-            }
-            else {
-                textInputLayout.setError(null);
-            }
-            if (textInputLayout.getError()==null){
-                if (imageSelected!=null){
-                    progressBar.setVisibility(View.VISIBLE);
-                    image=bitmapToString(imageSelected);
-                    uploadImage();
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED){
-                        Log.e("TAG", "onClick: permisison granted now write");
-                        writeToExternalStorage(imageSelected, getRequiredEmail(preferences.getString("email", ""))+getImageName());
-                    }
-                    else {
-                        Log.e("TAG", "onClick: write permission not granted");
+            if (utils.isNetworkConnected(this)) {
+                if (textInputLayout.getError() == null) {
+                    if (imageSelected != null) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        image = bitmapToString(imageSelected);
+                        uploadImage();
+                        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                            Log.e("TAG", "onClick: permisison granted now write");
+                            writeToExternalStorage(imageSelected, getRequiredEmail(preferences.getString("email", "")) + getImageName());
+                        } else {
+                            Log.e("TAG", "onClick: write permission not granted");
+                        }
                     }
                 }
+            }
+            else {
+                Toast.makeText(this, "No internet connection!!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -151,7 +155,7 @@ public class VolleyImageUploadActivity extends PreferenceInitializingActivity im
                     if (s.toString().contains(" ")) {
                         textInputLayout.setError("no white spaces allowed");
                     }
-                    else if (!Pattern.matches("[a-zA-Z_0-9]*", s.toString())){ //patterns and regex
+                    else if (!Pattern.matches("[a-zA-Z_0-9]+", s.toString())){ //patterns and regex
                         textInputLayout.setError("special chars except '_' cannot be used!!");
                     }
                     else {

@@ -8,9 +8,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
+import static com.myapp.doctorapp.Globals.LOCAL_SERVER_IP;
+
 public class ApiClient {
 
-    public static final String BASE_URL="http://192.168.1.72/";
+    public static final String BASE_URL="http://"+LOCAL_SERVER_IP+"/";
     static Retrofit retrofitObj;
 
     public static Retrofit getRetrofitObj(){

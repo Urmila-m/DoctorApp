@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.myapp.doctorapp.R;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
+import com.myapp.doctorapp.utils.NetworkUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +26,7 @@ public class ChangePasswordFragment extends Fragment {
     private Button btnSaveChanges;
     String currentPassword;
     OnFragmentButtonClickListener listener;
+    NetworkUtils utils;
 
     public ChangePasswordFragment() {
         // Required empty public constructor
@@ -33,6 +35,7 @@ public class ChangePasswordFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        utils=new NetworkUtils();
         if (context!=null){
             listener= (OnFragmentButtonClickListener) context;
         }
@@ -68,22 +71,24 @@ public class ChangePasswordFragment extends Fragment {
         btnSaveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle b=new Bundle();
-                if (!etNewPass.getText().toString().equals(etConfirmNewPass.getText().toString())){
-                    Toast.makeText(getContext(), "New password doesnt match!!", Toast.LENGTH_SHORT).show();
-                }
-                else if (!currentPassword.equals(etOldPass.getText().toString())){
-                    Toast.makeText(getContext(), "Current password doesnt match!!", Toast.LENGTH_LONG).show();
+                if (utils.isNetworkConnected(getContext())) {
+                    Bundle b = new Bundle();
+                    if (!etNewPass.getText().toString().equals(etConfirmNewPass.getText().toString())) {
+                        Toast.makeText(getContext(), "New password doesnt match!!", Toast.LENGTH_SHORT).show();
+                    } else if (!currentPassword.equals(etOldPass.getText().toString())) {
+                        Toast.makeText(getContext(), "Current password doesnt match!!", Toast.LENGTH_LONG).show();
+                    } else {
+                        if (etNewPass.getText().toString().length() < 8) {
+                            Toast.makeText(getContext(), "Password should be at least 8 characters long!!", Toast.LENGTH_LONG).show();
+                        } else {
+//                        b.putString("oldPassword", etOldPass.getText().toString());
+                            b.putString("newPassword", etNewPass.getText().toString());
+                            listener.onButtonClicked(btnSaveChanges.getId(), new HomeFragment(), b);
+                        }
+                    }
                 }
                 else {
-                    if(etNewPass.getText().toString().length()<8){
-                        Toast.makeText(getContext(), "Password should be at least 8 characters long!!", Toast.LENGTH_LONG).show();
-                    }
-                    else {
-//                        b.putString("oldPassword", etOldPass.getText().toString());
-                        b.putString("newPassword", etNewPass.getText().toString());
-                        listener.onButtonClicked(btnSaveChanges.getId(), new HomeFragment(), b);
-                    }
+                    Toast.makeText(getContext(), "No internet Connection!!", Toast.LENGTH_SHORT).show();
                 }
             }
         });

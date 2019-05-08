@@ -1,5 +1,6 @@
 package com.myapp.doctorapp.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import com.myapp.doctorapp.interfaces.OnDataRetrievedListener;
 import com.myapp.doctorapp.interfaces.OnFragmentButtonClickListener;
 import com.myapp.doctorapp.model.User;
 import com.myapp.doctorapp.services.NotificationService;
+import com.myapp.doctorapp.utils.NetworkUtils;
 
 import java.security.AuthProvider;
 import java.util.Set;
@@ -33,14 +35,18 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
     Bundle registrationInfo;
     ApiBackgroundTask apiTask;
     FirebaseAuth firebaseAuth;
+    NetworkUtils utils;
+    ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_before_login);
 
+        dialog=new ProgressDialog(this);
         registrationInfo = new Bundle();
         apiTask = new ApiBackgroundTask();
+        utils=new NetworkUtils();
         firebaseAuth=FirebaseAuth.getInstance();
         getSupportFragmentManager().beginTransaction().add(R.id.fl_before_login, new ManualSignUpFragment()).commit();
     }
@@ -55,36 +61,41 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
         }
 
         if (id==R.id.btn_custom_attribute_picker){
-            final User user=bundleToUser(registrationInfo);
-            apiTask.insertResponse(registrationInfo, this);
-            Log.e("TAG", "onButtonClicked: "+user.getEmail());
-            firebaseAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword())
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                firebaseAuth.signInWithEmailAndPassword(user.getEmail(), user.getPassword());
-                                Toast.makeText(BeforeLoginActivity.this, "Email registered successfully", Toast.LENGTH_SHORT).show();
-                                firebaseAuth.getCurrentUser().sendEmailVerification()
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                Log.e("TAG", "onComplete: verify your email");
-                                                startActivity(new Intent(BeforeLoginActivity.this, SignInActivity.class));
+            if (utils.isNetworkConnected(this)) {
+                final User user = bundleToUser(registrationInfo);
+                dialog.setTitle("registering!!");
+                dialog.show();
+                apiTask.insertResponse(registrationInfo, this);
+                Log.e("TAG", "onButtonClicked: " + user.getEmail());
+                firebaseAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword()).
+                        addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    firebaseAuth.signInWithEmailAndPassword(user.getEmail(), user.getPassword());
+                                    Toast.makeText(BeforeLoginActivity.this, "Email registered successfully, please verify your email!!", Toast.LENGTH_SHORT).show();
+                                    firebaseAuth.getCurrentUser().sendEmailVerification()
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    Log.e("TAG", "onComplete: verify your email");
+                                                    dialog.dismiss();
+                                                    startActivity(new Intent(BeforeLoginActivity.this, SignInActivity.class));
 
-                                            }
-                                        });
+                                                }
+                                            });
 
+                                } else {
+                                    Log.e("TAG", "onComplete: " + task.getException().getMessage());
+                                }
                             }
+                        });
 
-                            else {
-                                Log.e("TAG", "onComplete: "+task.getException().getMessage());
-                            }
-                        }
-                    });
+            }
+            else
+                Toast.makeText(this, "No internet connection!!", Toast.LENGTH_LONG).show();
 
         }
-
         else {
             getSupportFragmentManager().beginTransaction().add(R.id.fl_before_login, fragment).commit();
         }
@@ -95,7 +106,6 @@ public class BeforeLoginActivity extends PreferenceInitializingActivity implemen
     public void onDataRetrieved(String source, Bundle bundle) {
         if (source.equals(API_INSERT)){
             Log.e("TAG", "onDataRetrieved: registration successful"+bundle.getString("errorMsg"));
-
         }
 
         else if (source.equals(VERIFY_USER)){
